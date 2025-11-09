@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vakpagina</title>
+  <meta name="description" content="Bekijk de informatie en planning van het gekozen vak." />
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #e8f0ff, #ffffff);
+      color: #222;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background-color: #004aad;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+
+    #vakNaam {
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    main {
+      margin: 30px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 1000px;
+      padding: 30px;
+      min-height: 60vh;
+    }
+
+    .loading {
+      color: #666;
+      font-style: italic;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      background: #004aad;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      transition: background 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: #003380;
+    }
+
+    iframe {
+      width: 100%;
+      min-height: 75vh;
+      border: none;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 id="pageTitle">Vakpagina</h1>
+    <div id="vakNaam">Even laden...</div>
+  </header>
+
+  <main>
+    <a href="index.html" class="back-btn">← Terug naar overzicht</a>
+    <div id="contentArea" class="loading">De vakinformatie wordt geladen...</div>
+  </main>
+
+  <footer>
+    © <span id="year"></span> – Schooldashboard
+  </footer>
+
+  <script>
+    // --- Helperfunctie: lees URL-parameter ---
+    function getVakParam() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("vak");
+    }
+
+    // --- Pagina opbouwen ---
+    const vak = getVakParam();
+    const pageTitle = document.getElementById("pageTitle");
+    const vakNaam = document.getElementById("vakNaam");
+    const contentArea = document.getElementById("contentArea");
+
+    if (!vak) {
+      pageTitle.textContent = "Geen vak geselecteerd";
+      vakNaam.textContent = "⚠️ Kies een vak in het overzicht.";
+      contentArea.innerHTML = "<p>Er is geen vakparameter doorgegeven. Ga terug naar de <a href='index.html'>homepagina</a>.</p>";
+    } else {
+      pageTitle.textContent = "Vakpagina – " + vak;
+      vakNaam.textContent = "Laden van informatie voor: " + vak + "...";
+
+      // --- Vakinhoud laden uit apart HTML-bestand ---
+      fetch(`${vak}.html`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Bestand niet gevonden: " + vak + ".html");
+          }
+          return response.text();
+        })
+        .then(html => {
+          contentArea.innerHTML = `<iframe src="${vak}.html" title="${vak}"></iframe>`;
+          vakNaam.textContent = vak.replace(/-/g, " ");
+        })
+        .catch(err => {
+          console.error(err);
+          contentArea.innerHTML = `<p style="color:#d32f2f;">❌ Kan het vakbestand <strong>${vak}.html</strong> niet laden.</p>`;
+          vakNaam.textContent = "Fout bij laden van " + vak;
+        });
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
