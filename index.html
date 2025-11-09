@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lessenrooster</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e8f0ff, #ffffff);
+      color: #222;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #004aad;
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      width: 90%;
+      max-width: 1200px;
+      margin: 40px auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .card h2 {
+      color: #004aad;
+      margin-bottom: 8px;
+    }
+
+    .card h3 {
+      margin: 0;
+      color: #333;
+      font-weight: normal;
+      font-size: 1.1em;
+    }
+
+    .info {
+      font-size: 0.95em;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📅 Mijn Lessenrooster</h1>
+  </header>
+
+  <main>
+
+    <!-- DIGITALE VAARDIGHEDEN -->
+    <a href="digitalevaardigheden-1Aa.html" class="card">
+      <h2>💻 Digitale Vaardigheden</h2>
+      <h3>1Aa</h3>
+      <div class="info">
+        <p><strong>Dinsdag:</strong> 08:25 – 09:15 (OLC)</p>
+      </div>
+    </a>
+
+    <a href="digitalevaardigheden-3E.html" class="card">
+      <h2>💻 Digitale Vaardigheden</h2>
+      <h3>3E</h3>
+      <div class="info">
+        <p><strong>Woensdag:</strong> 08:25 – 09:15 (OLC)</p>
+      </div>
+    </a>
+
+    <!-- TECHNIEK -->
+    <a href="techniek-2Aa.html" class="card">
+      <h2>⚙️ Techniek</h2>
+      <h3>2Aa</h3>
+      <div class="info">
+        <p><strong>Maandag:</strong> 10:20 – 12:00 (E008, E009, E010)</p>
+      </div>
+    </a>
+
+    <a href="techniek-1Ab.html" class="card">
+      <h2>⚙️ Techniek</h2>
+      <h3>1Ab</h3>
+      <div class="info">
+        <p><strong>Dinsdag:</strong> 10:20 – 11:10 (E008, E009, E010)</p>
+        <p><strong>Woensdag:</strong> 09:15 – 10:05 (E008, E009, E010)</p>
+      </div>
+    </a>
+
+    <!-- STEM-TECHNIEKEN -->
+    <a href="stem-2Ba.html" class="card">
+      <h2>🔬 STEM-Technieken</h2>
+      <h3>2Ba</h3>
+      <div class="info">
+        <p><strong>Donderdag:</strong> 08:25 – 10:05 / 10:20 – 11:10 (E008, E009)</p>
+      </div>
+    </a>
+
+    <a href="stem-2Bb.html" class="card">
+      <h2>🔬 STEM-Technieken</h2>
+      <h3>2Bb</h3>
+      <div class="info">
+        <p><strong>Donderdag:</strong> 08:25 – 10:05 / 10:20 – 11:10 (E008, E009)</p>
+      </div>
+    </a>
+
+    <!-- FABLAB -->
+    <a href="fablab-1Ab.html" class="card">
+      <h2>🧰 Fablab</h2>
+      <h3>1Ab</h3>
+      <div class="info">
+        <p><strong>Maandag:</strong> 13:50 – 14:40 / 14:55 – 15:45 (D023, D024)</p>
+        <p><strong>Dinsdag:</strong> 10:20 – 12:00 (D023, D024)</p>
+        <p><strong>Woensdag:</strong> 10:20 – 12:00 (D023, D024)</p>
+      </div>
+    </a>
+
+    <!-- CONSTRUCTIE / MIXED MEDIA -->
+    <a href="mixedmedia-1B.html" class="card">
+      <h2>🧱 Constructie / Mixed Media</h2>
+      <h3>1B **</h3>
+      <div class="info">
+        <p><strong>Vrijdag:</strong> 09:15 – 10:05 / 10:20 – 12:00 (E008, E009, E010)</p>
+      </div>
+    </a>
+
+    <!-- ELEKTRICITEIT -->
+    <a href="elektriciteit-3E.html" class="card">
+      <h2>⚡ Realisatie – Elektriciteit</h2>
+      <h3>3E</h3>
+      <div class="info">
+        <p><strong>Vrijdag:</strong> 13:00 – 14:40 / 13:50 – 14:40 / 14:55 – 15:45 (D008)</p>
+      </div>
+    </a>
+
+    <!-- EXPLORELAB -->
+    <a href="explorelab-2Ab.html" class="card">
+      <h2>🧠 ExploreLab</h2>
+      <h3>2Ab</h3>
+      <div class="info">
+        <p><strong>Maandag:</strong> 08:25 – 10:05 (D023, D024)</p>
+      </div>
+    </a>
+
+  </main>
+
+  <footer>
+    © 2025 – Lessenrooster per klas | Schooldashboard
+  </footer>
+
+</body>
+</html>
