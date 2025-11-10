@@ -1,0 +1,106 @@
+<section id="lesdeel2">
+  <h2>🎬 Lesdeel 2 – Instructie</h2>
+  <p><strong>Doel:</strong> fouten en goed gedrag in digitale communicatie herkennen en verklaren.</p>
+
+  <!-- DEEL 1 -->
+  <div class="phase active" id="phase1">
+    <h3>🎥 Deel 1 – Slechte video <strong>5 punten</strong></h3>
+    <p>Bekijk het eerste fragment van een online meeting waarin veel fout gaat. Let op:</p>
+
+
+    <ul>
+      <li>Wat loopt er fout?</li>
+      <li>Waarom stoort dit?</li>
+      <li>Wie is verantwoordelijk (techniek, spreker, host)?</li>
+    </ul>
+
+    <video controls preload="metadata" class="lesson-video">
+  <source src="ref/slechte_meeting.mp4" type="video/mp4">
+  Je browser ondersteunt deze video niet.
+</video>
+
+    <button class="next-phase" data-next="phase2">➡️ Verder</button>
+  </div>
+
+  <!-- DEEL 2 -->
+  <div class="phase" id="phase2">
+    <h3>💬 Deel 2 – Nabespreking 1</h3>
+    <p>Bespreek kort in groepjes (2–3):</p>
+    <ul>
+      <li>Welke fouten kwamen vaak voor?</li>
+      <li>Wat viel op in houding of communicatie?</li>
+    </ul>
+    <p>Noteer enkele kernwoorden in je schrift</p>
+    <button class="next-phase" data-next="phase3">➡️ Verder</button>
+  </div>
+
+  <!-- DEEL 3 -->
+  <div class="phase" id="phase3">
+    <h3>🎞 Deel 3 – Goede video <strong>5 punten</strong></h3>
+    <p>Bekijk nu een goed voorbeeld van een online meeting. Let op:</p>
+<ul>
+      <li>Wat maakt dit beter?</li>
+      <li>Hoe wordt techniek goed gebruikt?</li>
+      <li>Wat is het verschil in houding en taal?</li>
+    </ul>
+    <video controls preload="metadata" class="lesson-video">
+  <source src="ref/goede_meeting.mp4" type="video/mp4">
+  Je browser ondersteunt deze video niet.
+</video>
+
+    <button class="next-phase" data-next="phase4">➡️ Verder</button>
+  </div>
+
+  <!-- DEEL 4 -->
+  <div class="phase" id="phase4">
+    <h3>🗣 Deel 4 – Nabespreking 2</h3>
+    <p>Vergelijk beide meetings </p>
+    <ul>
+      <li><strong>Techniek</strong> – microfoon, camera, verbinding, software</li>
+      <li><strong>Houding</strong> – oogcontact, lichaamstaal, concentratie</li>
+      <li><strong>Organisatie</strong> – volgorde, spreektijd, afspraken</li>
+      <li><strong>Taal</strong> – beleefdheid, duidelijkheid, professioneel taalgebruik</li>
+    </ul>
+    <p><em>Besluit:</em> Wat maakt een online meeting professioneel?</p>
+  </div>
+</section>
+
+<style>
+  .phase {
+    display: none;
+    background: #f9fbff;
+    border-left: 5px solid #004aad;
+    padding: 18px 22px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+  }
+  .phase.active {
+    display: block;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .lesson-video {
+    width: 100%;
+    max-height: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin: 15px 0;
+  }
+
+  .next-phase {
+    background: #004aad;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  .next-phase:hover { background: #003a8c; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

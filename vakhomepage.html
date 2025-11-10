@@ -69,6 +69,21 @@
       background: #e8f0ff;
     }
 
+    .nav-top a {
+      display: block;
+      background: #004aad;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .nav-top a:hover {
+      background: #005cf0;
+    }
+
     .bottom-link {
       background: #004aad;
       color: white;
@@ -103,11 +118,18 @@
   <main>
     <nav>
       <div>
+        <!-- 🔝 Bovenste vaste knoppen -->
+        <div class="nav-top">
+          <a href="index.html">🔙 Terug naar vakoverzicht</a>
+          <a id="homeButton" href="#">🏠 Homepage</a>
+        </div>
+
         <h2 id="vakNaam">Vaknaam</h2>
         <ul id="lesLijst">
           <!-- lessen worden hier dynamisch geladen -->
         </ul>
       </div>
+
       <a href="#" class="bottom-link">💡 Werk om te doen als je klaar bent</a>
     </nav>
 
@@ -119,7 +141,6 @@
   <footer>© 2025 – Schooldashboard</footer>
 
   <script>
-    // URL-parameter uitlezen
     const params = new URLSearchParams(window.location.search);
     const vakParam = params.get("vak") || "onbekend";
     const [vakNaam, klas] = vakParam.split("-");
@@ -127,42 +148,44 @@
     document.getElementById("vakTitel").innerText = `📘 ${vakNaam.replace(/^\w/, c => c.toUpperCase())} – ${klas.toUpperCase()}`;
     document.getElementById("vakNaam").innerText = vakNaam.replace(/^\w/, c => c.toUpperCase());
 
-    // Lesbestanden per vak (pas aan per jouw structuur)
-    const lessen = {
-      digitalevaardigheden: [
-        { titel: "Word 1", bestand: "digitalevaardigheden/word1.html" },
-        { titel: "Excel 1", bestand: "digitalevaardigheden/excel1.html" },
-        { titel: "Excel 7", bestand: "digitalevaardigheden/excel7.html" }
-      ],
-      techniek: [
-        { titel: "Schakelingen", bestand: "techniek/schakelingen.html" },
-        { titel: "Materialen", bestand: "techniek/materialen.html" },
-        { titel: "Projecten", bestand: "techniek/projecten.html" }
-      ],
-      stem: [
-        { titel: "Sensoren", bestand: "stem/sensoren.html" },
-        { titel: "3D-print", bestand: "stem/3dprint.html" }
-      ]
+    const lesLijst = document.getElementById("lesLijst");
+    const homeButton = document.getElementById("homeButton");
+
+    // Homepage-link instellen
+    homeButton.href = `${vakNaam}-${klas}.html`;
+    homeButton.onclick = (e) => {
+      e.preventDefault();
+      document.getElementById("contentFrame").src = `${vakNaam}-${klas}.html`;
     };
 
-    const lesLijst = document.getElementById("lesLijst");
-    const lijst = lessen[vakNaam] || [];
+    // JSON-index ophalen
+    fetch(`${vakNaam}/index.json`)
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(les => {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = "#";
+          a.textContent = les.titel;
+          a.onclick = (e) => {
+  e.preventDefault();
+  window.location.href = `${les.bestand}`;
+};
 
-    lijst.forEach(les => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      a.href = "#";
-      a.textContent = les.titel;
-      a.onclick = () => {
-        document.getElementById("contentFrame").src = les.bestand;
-        return false;
-      };
-      li.appendChild(a);
-      lesLijst.appendChild(li);
-    });
+          li.appendChild(a);
+          lesLijst.appendChild(li);
+        });
+      })
+      .catch(err => {
+        console.error("Kon de lessenlijst niet laden:", err);
+        const li = document.createElement("li");
+        li.textContent = "Geen lessen gevonden.";
+        lesLijst.appendChild(li);
+      });
 
-    // Standaard de welkomspagina laden
+    // standaard welkomspagina laden
     document.getElementById("contentFrame").src = `${vakNaam}-${klas}.html`;
   </script>
+
 </body>
 </html>
