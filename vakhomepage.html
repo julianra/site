@@ -4,272 +4,165 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vakpagina</title>
-  <meta name="description" content="Bekijk de informatie en planning van het gekozen vak." />
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #e8f0ff, #ffffff);
-      color: #222;
       margin: 0;
-      padding: 0;
+      background: linear-gradient(135deg, #e8f0ff, #ffffff);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
     header {
-      width: 100%;
       background-color: #004aad;
       color: white;
-      text-align: center;
       padding: 15px;
+      text-align: center;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    h1 {
-      margin: 0;
-      font-size: 1.8em;
-    }
-
-    #vakNaam {
-      font-weight: 500;
-      opacity: 0.9;
-    }
-
     main {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 25px;
-      width: 95%;
-      max-width: 1300px;
-      margin: 30px auto;
       flex: 1;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 0;
+      height: 100%;
     }
 
-    /* --- Sidebar links --- */
-    aside {
-      flex: 0 0 260px;
-      background: #ffffffaa;
-      border-radius: 16px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      padding: 20px;
+    nav {
+      background: white;
+      border-right: 1px solid #ccc;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      max-height: 80vh;
-      position: sticky;
-      top: 20px;
+      padding: 20px;
     }
 
-    .lessenlijst {
-      overflow-y: auto;
-      flex-grow: 1;
-      margin-bottom: 20px;
-    }
-
-    .sidebar-title {
-      font-weight: 600;
+    nav h2 {
+      margin-top: 0;
       color: #004aad;
+      font-size: 1.3em;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex: 1;
+    }
+
+    nav li {
       margin-bottom: 10px;
     }
 
-    .lesson-link {
-      display: block;
-      background: #f7f9ff;
-      border: 1px solid #d8e3ff;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
+    nav a {
       text-decoration: none;
-      color: #222;
-      font-size: 0.9em;
-      transition: background 0.2s, transform 0.1s;
-    }
-
-    .lesson-link:hover {
-      background: #e3ecff;
-      transform: translateY(-2px);
-    }
-
-    .lesson-day {
+      color: #004aad;
+      padding: 8px 12px;
+      border-radius: 8px;
       display: block;
-      color: #004aad;
-      font-size: 0.85em;
-      font-weight: 600;
+      transition: background 0.2s;
     }
 
-    /* --- Klaar-blok --- */
-    .klaar-blok {
-      background: #f0f4ff;
-      border: 2px solid #c8d8ff;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 0.9em;
+    nav a:hover {
+      background: #e8f0ff;
     }
 
-    .klaar-blok h3 {
-      margin-top: 0;
-      color: #004aad;
-      font-size: 1em;
-    }
-
-    .klaar-blok ul {
-      margin: 6px 0 0 20px;
-      padding: 0;
-    }
-
-    /* --- Inhoud rechts --- */
-    .content-area {
-      flex: 1 1 800px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      min-height: 70vh;
+    .bottom-link {
+      background: #004aad;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-decoration: none;
     }
 
     iframe {
       width: 100%;
-      min-height: 75vh;
+      height: calc(100vh - 100px);
       border: none;
-      border-radius: 12px;
-    }
-
-    .back-btn {
-      display: inline-block;
-      margin-bottom: 20px;
-      text-decoration: none;
-      background: #004aad;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 0.9em;
-      transition: background 0.2s ease;
-    }
-
-    .back-btn:hover {
-      background: #003380;
+      background: #f8f9fa;
     }
 
     footer {
-      margin-top: auto;
-      padding: 15px;
       text-align: center;
-      color: #666;
+      padding: 10px;
       font-size: 0.9em;
-    }
-
-    @media (max-width: 900px) {
-      main { flex-direction: column; }
-      aside { order: 1; width: 100%; max-height: unset; position: relative; }
-      .content-area { order: 2; }
+      color: #666;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1 id="pageTitle">Vakpagina</h1>
-    <div id="vakNaam">Even laden...</div>
+    <h1 id="vakTitel">Vakpagina</h1>
   </header>
 
   <main>
-    <!-- Navigatiekolom LINKS -->
-    <aside id="sidebar">
+    <nav>
       <div>
-        <div class="sidebar-title">📅 Lesoverzicht</div>
-        <div class="lessenlijst" id="lessenlijst">
-          <p style="color:#666;font-size:0.9em;">Even laden...</p>
-        </div>
-      </div>
-
-      <!-- Vast "Klaar?" blok -->
-      <div class="klaar-blok">
-        <h3>✅ Klaar? Extra opdrachten:</h3>
-        <ul id="klaarLijst">
-          <li>Maak een korte samenvatting van wat je geleerd hebt.</li>
-          <li>Help een klasgenoot met een oefening.</li>
-          <li>Werk aan je portfolio of verbeter je notities.</li>
+        <h2 id="vakNaam">Vaknaam</h2>
+        <ul id="lesLijst">
+          <!-- lessen worden hier dynamisch geladen -->
         </ul>
       </div>
-    </aside>
+      <a href="#" class="bottom-link">💡 Werk om te doen als je klaar bent</a>
+    </nav>
 
-    <!-- Inhoudsgebied RECHTS -->
-    <div class="content-area" id="contentArea">
-      <a href="index.html" class="back-btn">← Terug naar overzicht</a>
-      <div class="loading">De vakinformatie wordt geladen...</div>
-    </div>
+    <section>
+      <iframe id="contentFrame" src=""></iframe>
+    </section>
   </main>
 
-  <footer>
-    © <span id="year"></span> – Schooldashboard
-  </footer>
+  <footer>© 2025 – Schooldashboard</footer>
 
   <script>
-    // --- Helper: lees URL-parameter ---
-    function getVakParam() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("vak");
-    }
+    // URL-parameter uitlezen
+    const params = new URLSearchParams(window.location.search);
+    const vakParam = params.get("vak") || "onbekend";
+    const [vakNaam, klas] = vakParam.split("-");
 
-    const vak = getVakParam();
-    const pageTitle = document.getElementById("pageTitle");
-    const vakNaam = document.getElementById("vakNaam");
-    const contentArea = document.getElementById("contentArea");
-    const lessenlijst = document.getElementById("lessenlijst");
+    document.getElementById("vakTitel").innerText = `📘 ${vakNaam.replace(/^\w/, c => c.toUpperCase())} – ${klas.toUpperCase()}`;
+    document.getElementById("vakNaam").innerText = vakNaam.replace(/^\w/, c => c.toUpperCase());
 
-    // --- Voorbeeld lesdata per vak (hier verwijs je naar mappen) ---
-    const lessenData = {
-      "digitalevaardigheden": [
-        { map: "les1", titel: "Les 1 – Online houding", dag: "Dinsdag 7 okt" },
-        { map: "les2", titel: "Les 2 – Teams & communicatie", dag: "Dinsdag 14 okt" },
-        { map: "les3", titel: "Les 3 – Videofragmenten analyseren", dag: "Dinsdag 21 okt" },
+    // Lesbestanden per vak (pas aan per jouw structuur)
+    const lessen = {
+      digitalevaardigheden: [
+        { titel: "Word 1", bestand: "digitalevaardigheden/word1.html" },
+        { titel: "Excel 1", bestand: "digitalevaardigheden/excel1.html" },
+        { titel: "Excel 7", bestand: "digitalevaardigheden/excel7.html" }
       ],
-      "techniek": [
-        { map: "les1", titel: "Les 1 – Elektriciteit basis", dag: "Maandag 10 nov" },
-        { map: "les2", titel: "Les 2 – Serie & parallel", dag: "Maandag 17 nov" },
+      techniek: [
+        { titel: "Schakelingen", bestand: "techniek/schakelingen.html" },
+        { titel: "Materialen", bestand: "techniek/materialen.html" },
+        { titel: "Projecten", bestand: "techniek/projecten.html" }
       ],
-      "stem": [
-        { map: "les1", titel: "Les 1 – Wat is STEM?", dag: "Donderdag 6 nov" },
-        { map: "les2", titel: "Les 2 – Arduino basis", dag: "Donderdag 13 nov" },
+      stem: [
+        { titel: "Sensoren", bestand: "stem/sensoren.html" },
+        { titel: "3D-print", bestand: "stem/3dprint.html" }
       ]
     };
 
-    // --- Startpagina aanpassen ---
-    if (!vak) {
-      pageTitle.textContent = "Geen vak geselecteerd";
-      vakNaam.textContent = "⚠️ Kies een vak in het overzicht.";
-      contentArea.innerHTML = "<p>Er is geen vakparameter doorgegeven. Ga terug naar de <a href='index.html'>homepagina</a>.</p>";
-      lessenlijst.innerHTML = "<p>Geen vak geselecteerd.</p>";
-    } else {
-      pageTitle.textContent = "Vakpagina – " + vak;
-      vakNaam.textContent = vak.replace(/-/g, " ");
+    const lesLijst = document.getElementById("lesLijst");
+    const lijst = lessen[vakNaam] || [];
 
-      // --- Lessenlijst vullen ---
-      const lessen = lessenData[vak];
-      if (lessen) {
-        lessenlijst.innerHTML = "";
-        lessen.forEach(les => {
-          const link = document.createElement("a");
-          link.className = "lesson-link";
-          link.href = `${vak}/${les.map}/index.html`;
-          link.innerHTML = `<span class="lesson-day">${les.dag}</span>${les.titel}`;
-          link.target = "vakFrame";
-          lessenlijst.appendChild(link);
-        });
-      } else {
-        lessenlijst.innerHTML = "<p>Geen lessen gevonden voor dit vak.</p>";
-      }
+    lijst.forEach(les => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = "#";
+      a.textContent = les.titel;
+      a.onclick = () => {
+        document.getElementById("contentFrame").src = les.bestand;
+        return false;
+      };
+      li.appendChild(a);
+      lesLijst.appendChild(li);
+    });
 
-      // --- Hoofdpagina van het vak laden in iframe ---
-      contentArea.innerHTML = `
-        <a href="index.html" class="back-btn">← Terug naar overzicht</a>
-        <iframe name="vakFrame" src="${vak}/index.html" title="${vak}"></iframe>
-      `;
-    }
-
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // Standaard de welkomspagina laden
+    document.getElementById("contentFrame").src = `${vakNaam}-${klas}.html`;
   </script>
 </body>
 </html>
