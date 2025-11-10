@@ -26,7 +26,6 @@
       flex: 1;
       display: grid;
       grid-template-columns: 280px 1fr;
-      gap: 0;
       height: 100%;
     }
 
@@ -37,6 +36,7 @@
       flex-direction: column;
       justify-content: space-between;
       padding: 20px;
+      overflow: hidden;
     }
 
     nav h2 {
@@ -53,7 +53,7 @@
     }
 
     nav li {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     nav a {
@@ -90,15 +90,46 @@
       text-align: center;
       padding: 12px;
       border-radius: 8px;
-      margin-top: 20px;
+      margin-top: 10px;
       text-decoration: none;
     }
 
-    iframe {
-      width: 100%;
+    .viewer {
+      position: relative;
       height: calc(100vh - 100px);
-      border: none;
       background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .download-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: #004aad;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .download-bar button {
+      background: white;
+      color: #004aad;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.95em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .download-bar button:hover {
+      background: #e8f0ff;
+    }
+
+    #fileViewer {
+      flex: 1;
+      border: none;
+      width: 100%;
     }
 
     footer {
@@ -106,6 +137,55 @@
       padding: 10px;
       font-size: 0.9em;
       color: #666;
+    }
+
+    .doc-section {
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+
+    .doc-section h3 {
+      font-size: 1.1em;
+      color: #004aad;
+      margin-bottom: 8px;
+    }
+
+    .doc-list {
+      max-height: 160px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 8px;
+      background: #f9fbff;
+    }
+
+    .doc-list a {
+      display: block;
+      color: #004aad;
+      text-decoration: none;
+      padding: 6px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .doc-list a:hover {
+      background: #e8f0ff;
+    }
+
+    .doc-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .doc-list::-webkit-scrollbar-thumb {
+      background-color: #b5c7e3;
+      border-radius: 3px;
+    }
+
+    .not-supported {
+      padding: 30px;
+      text-align: center;
+      color: #333;
     }
   </style>
 </head>
@@ -118,74 +198,187 @@
   <main>
     <nav>
       <div>
-        <!-- 🔝 Bovenste vaste knoppen -->
         <div class="nav-top">
           <a href="index.html">🔙 Terug naar vakoverzicht</a>
-          <a id="homeButton" href="#">🏠 Homepage</a>
         </div>
 
         <h2 id="vakNaam">Vaknaam</h2>
-        <ul id="lesLijst">
-          <!-- lessen worden hier dynamisch geladen -->
-        </ul>
+        <ul id="lesLijst"></ul>
+
+        <div class="doc-section">
+          <h3>📂 Documentatie & hulpmiddelen</h3>
+          <div class="doc-list" id="docList">
+            <p style="color:#666; font-size:0.9em;">Laden...</p>
+          </div>
+        </div>
       </div>
 
       <a href="#" class="bottom-link">💡 Werk om te doen als je klaar bent</a>
     </nav>
 
-    <section>
-      <iframe id="contentFrame" src=""></iframe>
+    <section class="viewer">
+      <div class="download-bar" id="downloadBar">
+        <span id="fileName"></span>
+        <button id="downloadBtn">⬇️ Download</button>
+      </div>
+      <iframe id="fileViewer"></iframe>
     </section>
   </main>
 
   <footer>© 2025 – Schooldashboard</footer>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const vakParam = params.get("vak") || "onbekend";
-    const [vakNaam, klas] = vakParam.split("-");
+  const params = new URLSearchParams(window.location.search);
+  const vakParam = params.get("vak") || "onbekend";
+  const [vakNaam, klas] = vakParam.split("-");
 
-    document.getElementById("vakTitel").innerText = `📘 ${vakNaam.replace(/^\w/, c => c.toUpperCase())} – ${klas.toUpperCase()}`;
-    document.getElementById("vakNaam").innerText = vakNaam.replace(/^\w/, c => c.toUpperCase());
+  document.getElementById("vakTitel").innerText =
+    `📘 ${vakNaam.replace(/^\w/, c => c.toUpperCase())} – ${klas.toUpperCase()}`;
+  document.getElementById("vakNaam").innerText =
+    vakNaam.replace(/^\w/, c => c.toUpperCase());
 
-    const lesLijst = document.getElementById("lesLijst");
-    const homeButton = document.getElementById("homeButton");
+  const lesLijst   = document.getElementById("lesLijst");
+  const docList    = document.getElementById("docList");
+  const viewer     = document.getElementById("fileViewer");
+  const downloadBar = document.getElementById("downloadBar");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const fileNameEl  = document.getElementById("fileName");
 
-    // Homepage-link instellen
-    homeButton.href = `${vakNaam}-${klas}.html`;
-    homeButton.onclick = (e) => {
-      e.preventDefault();
-      document.getElementById("contentFrame").src = `${vakNaam}-${klas}.html`;
-    };
-
-    // JSON-index ophalen
-    fetch(`${vakNaam}/index.json`)
-      .then(response => response.json())
-      .then(data => {
-        data.forEach(les => {
-          const li = document.createElement("li");
-          const a = document.createElement("a");
-          a.href = "#";
-          a.textContent = les.titel;
-          a.onclick = (e) => {
-  e.preventDefault();
-  window.location.href = `${les.bestand}`;
-};
-
-          li.appendChild(a);
-          lesLijst.appendChild(li);
-        });
-      })
-      .catch(err => {
-        console.error("Kon de lessenlijst niet laden:", err);
+  /* ----------------------------
+     Lessenlijst laden
+  ----------------------------- */
+  fetch(`${vakNaam}/index.json`)
+    .then(r => r.json())
+    .then(data => {
+      data.forEach(les => {
         const li = document.createElement("li");
-        li.textContent = "Geen lessen gevonden.";
+        const a  = document.createElement("a");
+        a.href = "#";
+        a.textContent = les.titel;
+        a.onclick = e => {
+          e.preventDefault();
+          viewer.src = les.bestand;
+          downloadBar.style.display = "none";
+        };
+        li.appendChild(a);
         lesLijst.appendChild(li);
       });
+    })
+    .catch(err => {
+      console.error("Kon lessenlijst niet laden:", err);
+      const li = document.createElement("li");
+      li.textContent = "Geen lessen gevonden.";
+      lesLijst.appendChild(li);
+    });
 
-    // standaard welkomspagina laden
-    document.getElementById("contentFrame").src = `${vakNaam}-${klas}.html`;
-  </script>
+  /* ----------------------------
+     Documentatie laden
+  ----------------------------- */
+  fetch(`${vakNaam}/bestanden/index.json`)
+    .then(r => r.json())
+    .then(files => {
+      docList.innerHTML = "";
+      files.forEach(file => {
+        const a = document.createElement("a");
+        a.href = "#";
+        a.textContent = file.titel;
+        a.onclick = e => {
+          e.preventDefault();
+          showFile(file.bestand, file.titel);
+        };
+        docList.appendChild(a);
+      });
+    })
+    .catch(() => {
+      docList.innerHTML = "<p style='color:#999;'>Geen documentatie gevonden.</p>";
+    });
+
+  /* ----------------------------
+     Functies voor weergave
+  ----------------------------- */
+
+  // Maak absolute URL en encodeer voor Office/Google viewers
+  function absUrl(rel) {
+    const u = new URL(rel, window.location.href).href;
+    return { raw: u, enc: encodeURIComponent(u) };
+  }
+
+  // Controle of Office Web Viewer kan werken (enkel op publiek HTTPS)
+  function canUseExternalViewer() {
+    const isHttps = location.protocol === 'https:';
+    const isLocal = location.hostname === 'localhost' ||
+                    location.hostname === '127.0.0.1' ||
+                    location.protocol === 'file:';
+    return isHttps && !isLocal;
+  }
+
+  function showFile(url, titel) {
+    const ext = url.split('.').pop().toLowerCase();
+    const { raw, enc } = absUrl(url);
+
+    const officeTypes = ["doc","docx","xls","xlsx","ppt","pptx"];
+    const imageTypes  = ["png","jpg","jpeg","gif","webp","bmp","svg"];
+    const textTypes   = ["txt","csv","md","json"];
+    const pdfTypes    = ["pdf"];
+
+    // Toon downloadbalk altijd zichtbaar bij documentatie
+    fileNameEl.textContent = titel;
+    downloadBar.style.display = "flex";
+    downloadBtn.onclick = () => downloadFile(raw);
+
+    // PDF's en afbeeldingen tonen direct
+    if (pdfTypes.includes(ext) || imageTypes.includes(ext)) {
+      viewer.src = raw;
+      return;
+    }
+
+    // Tekst en CSV bestanden direct tonen
+    if (textTypes.includes(ext)) {
+      viewer.src = raw;
+      return;
+    }
+
+    // Office-bestanden -> externe viewer (indien mogelijk)
+    if (officeTypes.includes(ext) && canUseExternalViewer()) {
+      viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${enc}`;
+      return;
+    }
+
+    // Fallback als we het niet inline kunnen tonen
+    viewer.srcdoc = `
+      <div class='not-supported' style="padding:30px;text-align:center;">
+        <h2>📁 Dit bestand kan hier niet worden weergegeven</h2>
+        <p>Open of download het bestand via onderstaande knoppen.</p>
+        <p style="margin-top:20px;">
+          <a href="${raw}" target="_blank"
+             style="text-decoration:none; background:#004aad; color:white; padding:8px 12px; border-radius:6px;">
+             🔗 Open in nieuw tabblad
+          </a>
+          &nbsp;
+          <a href="${raw}" download
+             style="text-decoration:none; background:#009961; color:white; padding:8px 12px; border-radius:6px;">
+             ⬇️ Download
+          </a>
+        </p>
+        <p style="color:#666;font-size:0.9em;margin-top:15px;">
+          Tip: host de bestanden via HTTPS om ze hier direct te kunnen bekijken.
+        </p>
+      </div>
+    `;
+  }
+
+  function downloadFile(url) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = url.split("/").pop();
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  // standaard welkomspagina
+  viewer.src = `${vakNaam}-${klas}.html`;
+</script>
 
 </body>
 </html>
