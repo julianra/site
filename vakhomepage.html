@@ -14,7 +14,6 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
       min-height: 100vh;
     }
 
@@ -38,28 +37,103 @@
     }
 
     main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      width: 95%;
+      max-width: 1300px;
       margin: 30px auto;
+      flex: 1;
+    }
+
+    /* --- Sidebar links --- */
+    aside {
+      flex: 0 0 260px;
+      background: #ffffffaa;
+      border-radius: 16px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      max-height: 80vh;
+      position: sticky;
+      top: 20px;
+    }
+
+    .lessenlijst {
+      overflow-y: auto;
+      flex-grow: 1;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-title {
+      font-weight: 600;
+      color: #004aad;
+      margin-bottom: 10px;
+    }
+
+    .lesson-link {
+      display: block;
+      background: #f7f9ff;
+      border: 1px solid #d8e3ff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: #222;
+      font-size: 0.9em;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .lesson-link:hover {
+      background: #e3ecff;
+      transform: translateY(-2px);
+    }
+
+    .lesson-day {
+      display: block;
+      color: #004aad;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+
+    /* --- Klaar-blok --- */
+    .klaar-blok {
+      background: #f0f4ff;
+      border: 2px solid #c8d8ff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.9em;
+    }
+
+    .klaar-blok h3 {
+      margin-top: 0;
+      color: #004aad;
+      font-size: 1em;
+    }
+
+    .klaar-blok ul {
+      margin: 6px 0 0 20px;
+      padding: 0;
+    }
+
+    /* --- Inhoud rechts --- */
+    .content-area {
+      flex: 1 1 800px;
       background: white;
       border-radius: 16px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 1000px;
-      padding: 30px;
-      min-height: 60vh;
+      padding: 20px;
+      min-height: 70vh;
     }
 
-    .loading {
-      color: #666;
-      font-style: italic;
-      text-align: center;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 15px;
-      text-align: center;
-      color: #666;
-      font-size: 0.9em;
+    iframe {
+      width: 100%;
+      min-height: 75vh;
+      border: none;
+      border-radius: 12px;
     }
 
     .back-btn {
@@ -78,11 +152,18 @@
       background: #003380;
     }
 
-    iframe {
-      width: 100%;
-      min-height: 75vh;
-      border: none;
-      border-radius: 12px;
+    footer {
+      margin-top: auto;
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 900px) {
+      main { flex-direction: column; }
+      aside { order: 1; width: 100%; max-height: unset; position: relative; }
+      .content-area { order: 2; }
     }
   </style>
 </head>
@@ -94,8 +175,31 @@
   </header>
 
   <main>
-    <a href="index.html" class="back-btn">← Terug naar overzicht</a>
-    <div id="contentArea" class="loading">De vakinformatie wordt geladen...</div>
+    <!-- Navigatiekolom LINKS -->
+    <aside id="sidebar">
+      <div>
+        <div class="sidebar-title">📅 Lesoverzicht</div>
+        <div class="lessenlijst" id="lessenlijst">
+          <p style="color:#666;font-size:0.9em;">Even laden...</p>
+        </div>
+      </div>
+
+      <!-- Vast "Klaar?" blok -->
+      <div class="klaar-blok">
+        <h3>✅ Klaar? Extra opdrachten:</h3>
+        <ul id="klaarLijst">
+          <li>Maak een korte samenvatting van wat je geleerd hebt.</li>
+          <li>Help een klasgenoot met een oefening.</li>
+          <li>Werk aan je portfolio of verbeter je notities.</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Inhoudsgebied RECHTS -->
+    <div class="content-area" id="contentArea">
+      <a href="index.html" class="back-btn">← Terug naar overzicht</a>
+      <div class="loading">De vakinformatie wordt geladen...</div>
+    </div>
   </main>
 
   <footer>
@@ -103,43 +207,66 @@
   </footer>
 
   <script>
-    // --- Helperfunctie: lees URL-parameter ---
+    // --- Helper: lees URL-parameter ---
     function getVakParam() {
       const params = new URLSearchParams(window.location.search);
       return params.get("vak");
     }
 
-    // --- Pagina opbouwen ---
     const vak = getVakParam();
     const pageTitle = document.getElementById("pageTitle");
     const vakNaam = document.getElementById("vakNaam");
     const contentArea = document.getElementById("contentArea");
+    const lessenlijst = document.getElementById("lessenlijst");
 
+    // --- Voorbeeld lesdata per vak (hier verwijs je naar mappen) ---
+    const lessenData = {
+      "digitalevaardigheden": [
+        { map: "les1", titel: "Les 1 – Online houding", dag: "Dinsdag 7 okt" },
+        { map: "les2", titel: "Les 2 – Teams & communicatie", dag: "Dinsdag 14 okt" },
+        { map: "les3", titel: "Les 3 – Videofragmenten analyseren", dag: "Dinsdag 21 okt" },
+      ],
+      "techniek": [
+        { map: "les1", titel: "Les 1 – Elektriciteit basis", dag: "Maandag 10 nov" },
+        { map: "les2", titel: "Les 2 – Serie & parallel", dag: "Maandag 17 nov" },
+      ],
+      "stem": [
+        { map: "les1", titel: "Les 1 – Wat is STEM?", dag: "Donderdag 6 nov" },
+        { map: "les2", titel: "Les 2 – Arduino basis", dag: "Donderdag 13 nov" },
+      ]
+    };
+
+    // --- Startpagina aanpassen ---
     if (!vak) {
       pageTitle.textContent = "Geen vak geselecteerd";
       vakNaam.textContent = "⚠️ Kies een vak in het overzicht.";
       contentArea.innerHTML = "<p>Er is geen vakparameter doorgegeven. Ga terug naar de <a href='index.html'>homepagina</a>.</p>";
+      lessenlijst.innerHTML = "<p>Geen vak geselecteerd.</p>";
     } else {
       pageTitle.textContent = "Vakpagina – " + vak;
-      vakNaam.textContent = "Laden van informatie voor: " + vak + "...";
+      vakNaam.textContent = vak.replace(/-/g, " ");
 
-      // --- Vakinhoud laden uit apart HTML-bestand ---
-      fetch(`${vak}.html`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("Bestand niet gevonden: " + vak + ".html");
-          }
-          return response.text();
-        })
-        .then(html => {
-          contentArea.innerHTML = `<iframe src="${vak}.html" title="${vak}"></iframe>`;
-          vakNaam.textContent = vak.replace(/-/g, " ");
-        })
-        .catch(err => {
-          console.error(err);
-          contentArea.innerHTML = `<p style="color:#d32f2f;">❌ Kan het vakbestand <strong>${vak}.html</strong> niet laden.</p>`;
-          vakNaam.textContent = "Fout bij laden van " + vak;
+      // --- Lessenlijst vullen ---
+      const lessen = lessenData[vak];
+      if (lessen) {
+        lessenlijst.innerHTML = "";
+        lessen.forEach(les => {
+          const link = document.createElement("a");
+          link.className = "lesson-link";
+          link.href = `${vak}/${les.map}/index.html`;
+          link.innerHTML = `<span class="lesson-day">${les.dag}</span>${les.titel}`;
+          link.target = "vakFrame";
+          lessenlijst.appendChild(link);
         });
+      } else {
+        lessenlijst.innerHTML = "<p>Geen lessen gevonden voor dit vak.</p>";
+      }
+
+      // --- Hoofdpagina van het vak laden in iframe ---
+      contentArea.innerHTML = `
+        <a href="index.html" class="back-btn">← Terug naar overzicht</a>
+        <iframe name="vakFrame" src="${vak}/index.html" title="${vak}"></iframe>
+      `;
     }
 
     document.getElementById("year").textContent = new Date().getFullYear();
