@@ -1,0 +1,146 @@
+<section id="lesdeel4">
+  <h2>🚀 Lesdeel 4 – Overgang naar project & afsluiting</h2>
+
+  <!-- UITLEG OVER PROJECT -->
+  <div class="phase active" id="phase1">
+    <h3>🎯 Volgende stap – het project</h3>
+    <blockquote class="teacher-quote">
+      “Volgende les gaan jullie <strong>zelf in groep een online meeting naspelen</strong>:
+      één slechte, één goede.”
+    </blockquote>
+
+    <ul>
+      <li>We verdelen vandaag alvast groepjes.</li>
+      <li>Jullie denken kort na over mogelijke onderwerpen.</li>
+      <li>Het doel blijft: professioneel digitaal communiceren.</li>
+    </ul>
+
+    <button class="next-phase" data-next="phase2">➡️ Naar brainstorm</button>
+  </div>
+
+  <!-- BRAINSTORM -->
+  <div class="phase" id="phase2">
+    <h3>💡 Groepsbrainstorm – Kies jullie onderwerp</h3>
+    <p>Kies als groep een <strong>actueel en relevant thema</strong> dat met digitale communicatie of media te maken heeft.</p>
+    <p>Gebruik dit als inspiratie:</p>
+
+    <ul class="topic-list">
+      <li>📱 <strong>Sociale media bij kinderen onder de 12 jaar</strong> – is dat verantwoord?</li>
+      <li>📺 <strong>Tv of smartphone op de slaapkamer</strong> – wat doet dat met je slaap en concentratie?</li>
+      <li>👵 <strong>Bejaarden en digitalisatie</strong> – hoe kunnen ouderen beter leren omgaan met technologie?</li>
+      <li>🤖 <strong>Algoritmes van Facebook en Google</strong> – bepalen ze wat jij denkt?</li>
+      <li>💬 <strong>Online pesten en respectvolle communicatie</strong> – hoe ga je daarmee om?</li>
+      <li>🕵️‍♀️ <strong>Privacy en gegevens online</strong> – wie heeft toegang tot jouw data?</li>
+      <li>🎮 <strong>Gamen en online gedrag</strong> – wat is gezond, wat niet?</li>
+      <li>💼 <strong>Solliciteren of professioneel communiceren online</strong> – hoe kom je professioneel over?</li>
+      <li>🏫 <strong>Smartphones op school</strong> – verbieden of gebruiken?</li>
+      <li>📸 <strong>Online identiteit en imago</strong> – hoe echt ben jij online?</li>
+    </ul>
+
+    <button class="next-phase" data-next="phase3">➡️ Afsluiting</button>
+  </div>
+
+  <!-- AFSLUITING -->
+  <div class="phase" id="phase3">
+    <h3>👏 Afsluiting</h3>
+   
+    <div class="end-banner">
+      🌟 <strong>Goed gedaan vandaag!</strong><br>
+      Tot volgende keer 👋
+    </div>
+  </div>
+</section>
+
+<style>
+  #lesdeel4 { animation: fadeIn 0.6s ease; }
+
+  .phase {
+    display: none;
+    background: #f9fbff;
+    border-left: 5px solid #004aad;
+    padding: 18px 22px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+  }
+
+  .phase.active {
+    display: block;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .teacher-quote {
+    background: #eaf1ff;
+    border-left: 4px solid #004aad;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-style: italic;
+    margin: 10px 0;
+  }
+
+  .topic-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+  }
+
+  .topic-list li {
+    background: #eef5ff;
+    margin: 6px 0;
+    padding: 8px 10px;
+    border-left: 4px solid #004aad;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .topic-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .next-phase {
+    background: #004aad;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+
+  .next-phase:hover { background: #003a8c; }
+
+  .note {
+    font-style: italic;
+    color: #333;
+    background: #eef5ff;
+    border-left: 4px solid #004aad;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-top: 8px;
+  }
+
+  .tip {
+    background: #e9f7f1;
+    border-left: 5px solid #009961;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 15px;
+  }
+
+  .end-banner {
+    background: linear-gradient(135deg, #004aad, #0066ff);
+    color: white;
+    text-align: center;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 25px;
+    font-size: 1.1em;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
