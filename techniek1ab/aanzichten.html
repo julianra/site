@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Techniek – Les 3: Van 2D naar 3D</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #e8f0ff, #ffffff);
+      color: #003366;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #004aad;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    #clock {
+      font-size: 1em;
+      color: #e0e6ff;
+      margin-top: 5px;
+    }
+
+    #content {
+      flex: 1;
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f4f8ff;
+      border-top: 1px solid #ccc;
+      position: sticky;
+      bottom: 0;
+    }
+
+    button {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #003a8c;
+    }
+
+    #timer {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #004aad;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚙️ Techniek – Les 3: Van 2D naar 3D</h1>
+    <div id="clock">🕒 10:20</div>
+  </header>
+
+  <main id="content">
+    <!-- Lesdeel wordt hier geladen -->
+  </main>
+
+  <nav>
+    <button id="prevBtn">⬅ Vorige</button>
+    <div id="timer">00:00</div>
+    <button id="nextBtn">Volgende ➡</button>
+  </nav>
+
+  <footer>
+    © 2025 – Techniek 1A/B | Les 3: Van 2D naar 3D
+  </footer>
+
+  <script>
+    // -------------------------------------------------------
+    // Configuratie
+    // -------------------------------------------------------
+    const startLes = new Date();
+    startLes.setHours(10, 20, 0, 0); // start om 10u20
+
+    const lesdelen = [
+      { bestand: "lesdeel/lesdeel1.html", duur: 10 },
+      { bestand: "lesdeel/lesdeel1.html", duur: 10 },
+      { bestand: "lesdeel/lesdeel1.html", duur: 10 },
+      { bestand: "lesdeel/lesdeel1.html", duur: 10 }
+    ];
+
+    const totalDuration = lesdelen.reduce((a, b) => a + b.duur, 0); // 50 min
+
+    let current = 0;
+    const content = document.getElementById("content");
+    const timerEl = document.getElementById("timer");
+    const clockEl = document.getElementById("clock");
+
+    // -------------------------------------------------------
+    // Laad juiste lesdeel op basis van tijd
+    // -------------------------------------------------------
+    function bepaalHuidigLesdeel() {
+      const now = new Date();
+      const diffMinuten = (now - startLes) / 60000;
+      let cumul = 0;
+      for (let i = 0; i < lesdelen.length; i++) {
+        cumul += lesdelen[i].duur;
+        if (diffMinuten < cumul) return i;
+      }
+      return lesdelen.length - 1;
+    }
+
+    // -------------------------------------------------------
+    // Lesdeel laden
+    // -------------------------------------------------------
+    function loadLesdeel(index) {
+      fetch(lesdelen[index].bestand)
+        .then(res => res.text())
+        .then(html => {
+          content.innerHTML = html;
+        })
+        .catch(() => {
+          content.innerHTML = "<p style='color:red;'>❌ Dit lesdeel kon niet geladen worden.</p>";
+        });
+    }
+
+    // -------------------------------------------------------
+    // Toon live klok & countdown
+    // -------------------------------------------------------
+    function updateTimers() {
+      const now = new Date();
+      const uren = String(now.getHours()).padStart(2, "0");
+      const min = String(now.getMinutes()).padStart(2, "0");
+      clockEl.textContent = `🕒 ${uren}:${min}`;
+
+      // bereken resterende tijd voor huidig deel
+      const huidig = bepaalHuidigLesdeel();
+      if (huidig !== current) {
+        current = huidig;
+        loadLesdeel(current);
+      }
+
+      // bereken resterende minuten binnen huidige fase
+      let beginMin = 0;
+      for (let i = 0; i < current; i++) beginMin += lesdelen[i].duur;
+      const deelStart = new Date(startLes.getTime() + beginMin * 60000);
+      const deelEinde = new Date(deelStart.getTime() + lesdelen[current].duur * 60000);
+
+      const remainingSec = Math.floor((deelEinde - now) / 1000);
+      const minLeft = Math.floor(Math.max(remainingSec, 0) / 60);
+      const secLeft = Math.max(remainingSec, 0) % 60;
+
+      timerEl.textContent = `${String(minLeft).padStart(2, "0")}:${String(secLeft).padStart(2, "0")}`;
+
+      // kleurcodes
+      if (remainingSec <= 0) {
+        timerEl.style.color = "#d90429";
+      } else if (remainingSec < 120) {
+        timerEl.style.color = "#e63946";
+      } else if (remainingSec < 300) {
+        timerEl.style.color = "#f1c40f";
+      } else {
+        timerEl.style.color = "#009961";
+      }
+
+      requestAnimationFrame(updateTimers);
+    }
+
+    // -------------------------------------------------------
+    // Navigatieknoppen
+    // -------------------------------------------------------
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (current < lesdelen.length - 1) {
+        current++;
+        loadLesdeel(current);
+      }
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (current > 0) {
+        current--;
+        loadLesdeel(current);
+      }
+    });
+
+    // -------------------------------------------------------
+    // Start: laad juiste deel op basis van huidige tijd
+    // -------------------------------------------------------
+    current = bepaalHuidigLesdeel();
+    loadLesdeel(current);
+    updateTimers();
+  </script>
+
+</body>
+</html>

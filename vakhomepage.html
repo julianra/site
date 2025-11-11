@@ -227,29 +227,41 @@
 
   <footer>© 2025 – Schooldashboard</footer>
 
-  <script>
+<script>
   const params = new URLSearchParams(window.location.search);
-  const vakParam = params.get("vak") || "onbekend";
-  const [vakNaam, klas] = vakParam.split("-");
+  const rawVak = params.get("vak") || "onbekend";
 
+  const cleaned = rawVak.replace(/\.html$/i, "");
+  let [vakNaam, klas = ""] = cleaned.split("-");
+
+  const titelVak = vakNaam.charAt(0).toUpperCase() + vakNaam.slice(1);
   document.getElementById("vakTitel").innerText =
-    `📘 ${vakNaam.replace(/^\w/, c => c.toUpperCase())} – ${klas.toUpperCase()}`;
-  document.getElementById("vakNaam").innerText =
-    vakNaam.replace(/^\w/, c => c.toUpperCase());
+    `📘 ${titelVak}${klas ? " – " + klas.toUpperCase() : ""}`;
+  document.getElementById("vakNaam").innerText = titelVak;
 
-  const lesLijst   = document.getElementById("lesLijst");
-  const docList    = document.getElementById("docList");
-  const viewer     = document.getElementById("fileViewer");
+  const basePath = `${vakNaam.toLowerCase()}${klas.toLowerCase()}`;
+
+  const lesLijst    = document.getElementById("lesLijst");
+  const docList     = document.getElementById("docList");
+  const viewer      = document.getElementById("fileViewer");
   const downloadBar = document.getElementById("downloadBar");
   const downloadBtn = document.getElementById("downloadBtn");
   const fileNameEl  = document.getElementById("fileName");
 
   /* ----------------------------
-     Lessenlijst laden
+     Lessen laden
   ----------------------------- */
-  fetch(`${vakNaam}/index.json`)
+  fetch(`${basePath}/index.json`)
     .then(r => r.json())
     .then(data => {
+      lesLijst.innerHTML = "";
+      if (!Array.isArray(data) || data.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "Geen lessen gevonden.";
+        lesLijst.appendChild(li);
+        return;
+      }
+
       data.forEach(les => {
         const li = document.createElement("li");
         const a  = document.createElement("a");
@@ -257,8 +269,8 @@
         a.textContent = les.titel;
         a.onclick = e => {
           e.preventDefault();
-          viewer.src = les.bestand;
-          downloadBar.style.display = "none";
+          // ✅ Volledig scherm: open de les als aparte pagina
+          window.location.href = les.bestand;
         };
         li.appendChild(a);
         lesLijst.appendChild(li);
@@ -274,10 +286,14 @@
   /* ----------------------------
      Documentatie laden
   ----------------------------- */
-  fetch(`${vakNaam}/bestanden/index.json`)
+  fetch(`${basePath}/bestanden/index.json`)
     .then(r => r.json())
     .then(files => {
       docList.innerHTML = "";
+      if (!Array.isArray(files) || files.length === 0) {
+        docList.innerHTML = "<p style='color:#999;'>Geen documentatie gevonden.</p>";
+        return;
+      }
       files.forEach(file => {
         const a = document.createElement("a");
         a.href = "#";
@@ -294,16 +310,13 @@
     });
 
   /* ----------------------------
-     Functies voor weergave
+     Viewer-functies voor documenten
   ----------------------------- */
-
-  // Maak absolute URL en encodeer voor Office/Google viewers
   function absUrl(rel) {
     const u = new URL(rel, window.location.href).href;
     return { raw: u, enc: encodeURIComponent(u) };
   }
 
-  // Controle of Office Web Viewer kan werken (enkel op publiek HTTPS)
   function canUseExternalViewer() {
     const isHttps = location.protocol === 'https:';
     const isLocal = location.hostname === 'localhost' ||
@@ -321,30 +334,17 @@
     const textTypes   = ["txt","csv","md","json"];
     const pdfTypes    = ["pdf"];
 
-    // Toon downloadbalk altijd zichtbaar bij documentatie
     fileNameEl.textContent = titel;
     downloadBar.style.display = "flex";
     downloadBtn.onclick = () => downloadFile(raw);
 
-    // PDF's en afbeeldingen tonen direct
-    if (pdfTypes.includes(ext) || imageTypes.includes(ext)) {
-      viewer.src = raw;
-      return;
+    if (pdfTypes.includes(ext) || imageTypes.includes(ext) || textTypes.includes(ext)) {
+      viewer.src = raw; return;
     }
-
-    // Tekst en CSV bestanden direct tonen
-    if (textTypes.includes(ext)) {
-      viewer.src = raw;
-      return;
-    }
-
-    // Office-bestanden -> externe viewer (indien mogelijk)
     if (officeTypes.includes(ext) && canUseExternalViewer()) {
-      viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${enc}`;
-      return;
+      viewer.src = `https://view.officeapps.live.com/op/embed.aspx?src=${enc}`; return;
     }
 
-    // Fallback als we het niet inline kunnen tonen
     viewer.srcdoc = `
       <div class='not-supported' style="padding:30px;text-align:center;">
         <h2>📁 Dit bestand kan hier niet worden weergegeven</h2>
@@ -360,11 +360,7 @@
              ⬇️ Download
           </a>
         </p>
-        <p style="color:#666;font-size:0.9em;margin-top:15px;">
-          Tip: host de bestanden via HTTPS om ze hier direct te kunnen bekijken.
-        </p>
-      </div>
-    `;
+      </div>`;
   }
 
   function downloadFile(url) {
@@ -376,8 +372,14 @@
     link.remove();
   }
 
-  // standaard welkomspagina
-  viewer.src = `${vakNaam}-${klas}.html`;
+  /* ----------------------------
+     Default startpagina
+  ----------------------------- */
+  const defaultHome = klas
+    ? `${vakNaam.toLowerCase()}-${klas.toLowerCase()}.html`
+    : `${vakNaam.toLowerCase()}.html`;
+
+  viewer.src = defaultHome;
 </script>
 
 </body>
