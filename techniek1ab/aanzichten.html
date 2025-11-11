@@ -110,121 +110,136 @@
     © 2025 – Techniek 1A/B | Les 3: Van 2D naar 3D
   </footer>
 
-  <script>
-    // -------------------------------------------------------
-    // Configuratie
-    // -------------------------------------------------------
-    const startLes = new Date();
-    startLes.setHours(10, 20, 0, 0); // start om 10u20
+ <script>
+  // -------------------------------------------------------
+  // Configuratie
+  // -------------------------------------------------------
+  const startLes = new Date();
+  startLes.setHours(10, 20, 0, 0); // start om 10u20
 
-    const lesdelen = [
-      { bestand: "lesdeel/lesdeel1.html", duur: 10 },
-      { bestand: "lesdeel/lesdeel1.html", duur: 10 },
-      { bestand: "lesdeel/lesdeel1.html", duur: 10 },
-      { bestand: "lesdeel/lesdeel1.html", duur: 10 }
-    ];
+  const lesdelen = [
+    { bestand: "lesdeel/lesdeel1.html", duur: 10 },
+    { bestand: "lesdeel/lesdeel2.html", duur: 10 },
+    { bestand: "lesdeel/lesdeel3.html", duur: 10 },
+    { bestand: "lesdeel/lesdeel4.html", duur: 10 }
+  ];
 
-    const totalDuration = lesdelen.reduce((a, b) => a + b.duur, 0); // 50 min
+  const content = document.getElementById("content");
+  const timerEl = document.getElementById("timer");
+  const clockEl = document.getElementById("clock");
 
-    let current = 0;
-    const content = document.getElementById("content");
-    const timerEl = document.getElementById("timer");
-    const clockEl = document.getElementById("clock");
+  let current = 0;
+  let autoSync = true;
+  let afbeeldingen = ["ref/vorm1.jpg", "ref/vorm2.png", "ref/vorm3.jpg"];
+  let vormIndex = 0;
 
-    // -------------------------------------------------------
-    // Laad juiste lesdeel op basis van tijd
-    // -------------------------------------------------------
-    function bepaalHuidigLesdeel() {
-      const now = new Date();
-      const diffMinuten = (now - startLes) / 60000;
-      let cumul = 0;
-      for (let i = 0; i < lesdelen.length; i++) {
-        cumul += lesdelen[i].duur;
-        if (diffMinuten < cumul) return i;
-      }
-      return lesdelen.length - 1;
+  // -------------------------------------------------------
+  // Huidig lesdeel bepalen op basis van tijd
+  // -------------------------------------------------------
+  function bepaalHuidigLesdeel() {
+    const now = new Date();
+    const diffMinuten = (now - startLes) / 60000;
+    let cumul = 0;
+    for (let i = 0; i < lesdelen.length; i++) {
+      cumul += lesdelen[i].duur;
+      if (diffMinuten < cumul) return i;
+    }
+    return lesdelen.length - 1;
+  }
+
+  // -------------------------------------------------------
+  // Lesdeel laden
+  // -------------------------------------------------------
+  function loadLesdeel(index) {
+    fetch(lesdelen[index].bestand)
+      .then(res => res.text())
+      .then(html => {
+        content.innerHTML = html;
+        koppelInteracties(); // activeer eventlisteners van dat deel
+      })
+      .catch(() => {
+        content.innerHTML = "<p style='color:red;'>❌ Dit lesdeel kon niet geladen worden.</p>";
+      });
+  }
+
+  // -------------------------------------------------------
+  // Koppeling met interactieve elementen in lesdelen
+  // -------------------------------------------------------
+  function koppelInteracties() {
+    // voorbeeld: knop voor volgende vorm (alleen aanwezig in lesdeel4)
+    const nextVormBtn = content.querySelector("#nextVormBtn");
+    const foto = content.querySelector("#vormFoto");
+
+    if (nextVormBtn && foto) {
+      nextVormBtn.addEventListener("click", () => {
+        vormIndex = (vormIndex + 1) % afbeeldingen.length;
+        foto.src = afbeeldingen[vormIndex];
+      });
+    }
+  }
+
+  // -------------------------------------------------------
+  // Klok & countdown
+  // -------------------------------------------------------
+  function updateTimers() {
+    const now = new Date();
+    clockEl.textContent = `🕒 ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+    const huidig = bepaalHuidigLesdeel();
+    if (autoSync && huidig !== current) {
+      current = huidig;
+      loadLesdeel(current);
     }
 
-    // -------------------------------------------------------
-    // Lesdeel laden
-    // -------------------------------------------------------
-    function loadLesdeel(index) {
-      fetch(lesdelen[index].bestand)
-        .then(res => res.text())
-        .then(html => {
-          content.innerHTML = html;
-        })
-        .catch(() => {
-          content.innerHTML = "<p style='color:red;'>❌ Dit lesdeel kon niet geladen worden.</p>";
-        });
+    let beginMin = 0;
+    for (let i = 0; i < current; i++) beginMin += lesdelen[i].duur;
+    const deelStart = new Date(startLes.getTime() + beginMin * 60000);
+    const deelEinde = new Date(deelStart.getTime() + lesdelen[current].duur * 60000);
+
+    const remainingSec = Math.max(0, Math.floor((deelEinde - now) / 1000));
+    const minLeft = Math.floor(remainingSec / 60);
+    const secLeft = remainingSec % 60;
+    timerEl.textContent = `${String(minLeft).padStart(2, "0")}:${String(secLeft).padStart(2, "0")}`;
+
+    // kleurcodes
+    timerEl.style.color =
+      remainingSec <= 0 ? "#d90429" :
+      remainingSec < 120 ? "#e63946" :
+      remainingSec < 300 ? "#f1c40f" :
+      "#009961";
+
+    requestAnimationFrame(updateTimers);
+  }
+
+  // -------------------------------------------------------
+  // Navigatie
+  // -------------------------------------------------------
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (current < lesdelen.length - 1) {
+      autoSync = false;
+      current++;
+      loadLesdeel(current);
     }
+  });
 
-    // -------------------------------------------------------
-    // Toon live klok & countdown
-    // -------------------------------------------------------
-    function updateTimers() {
-      const now = new Date();
-      const uren = String(now.getHours()).padStart(2, "0");
-      const min = String(now.getMinutes()).padStart(2, "0");
-      clockEl.textContent = `🕒 ${uren}:${min}`;
-
-      // bereken resterende tijd voor huidig deel
-      const huidig = bepaalHuidigLesdeel();
-      if (huidig !== current) {
-        current = huidig;
-        loadLesdeel(current);
-      }
-
-      // bereken resterende minuten binnen huidige fase
-      let beginMin = 0;
-      for (let i = 0; i < current; i++) beginMin += lesdelen[i].duur;
-      const deelStart = new Date(startLes.getTime() + beginMin * 60000);
-      const deelEinde = new Date(deelStart.getTime() + lesdelen[current].duur * 60000);
-
-      const remainingSec = Math.floor((deelEinde - now) / 1000);
-      const minLeft = Math.floor(Math.max(remainingSec, 0) / 60);
-      const secLeft = Math.max(remainingSec, 0) % 60;
-
-      timerEl.textContent = `${String(minLeft).padStart(2, "0")}:${String(secLeft).padStart(2, "0")}`;
-
-      // kleurcodes
-      if (remainingSec <= 0) {
-        timerEl.style.color = "#d90429";
-      } else if (remainingSec < 120) {
-        timerEl.style.color = "#e63946";
-      } else if (remainingSec < 300) {
-        timerEl.style.color = "#f1c40f";
-      } else {
-        timerEl.style.color = "#009961";
-      }
-
-      requestAnimationFrame(updateTimers);
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    if (current > 0) {
+      autoSync = false;
+      current--;
+      loadLesdeel(current);
     }
+  });
 
-    // -------------------------------------------------------
-    // Navigatieknoppen
-    // -------------------------------------------------------
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      if (current < lesdelen.length - 1) {
-        current++;
-        loadLesdeel(current);
-      }
-    });
+  timerEl.addEventListener("dblclick", () => (autoSync = true));
 
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      if (current > 0) {
-        current--;
-        loadLesdeel(current);
-      }
-    });
+  // -------------------------------------------------------
+  // Start
+  // -------------------------------------------------------
+  current = bepaalHuidigLesdeel();
+  loadLesdeel(current);
+  updateTimers();
+</script>
 
-    // -------------------------------------------------------
-    // Start: laad juiste deel op basis van huidige tijd
-    // -------------------------------------------------------
-    current = bepaalHuidigLesdeel();
-    loadLesdeel(current);
-    updateTimers();
-  </script>
 
 </body>
 </html>
