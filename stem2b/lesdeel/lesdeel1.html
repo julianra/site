@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEGO Mindstorms – Opdrachten</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #e8f0ff, #ffffff);
+      color: #003366;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #004aad;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    #clock {
+      font-size: 1em;
+      color: #e0e6ff;
+      margin-top: 5px;
+    }
+
+    #content {
+      flex: 1;
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f4f8ff;
+      border-top: 1px solid #ccc;
+      position: sticky;
+      bottom: 0;
+    }
+
+    button {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #003a8c;
+    }
+
+    #timer {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #004aad;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    h2 {
+      color: #004aad;
+      margin-top: 0;
+    }
+
+    p {
+      line-height: 1.7em;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🤖 LEGO Mindstorms – Opdrachten</h1>
+    <div id="clock">🕒 10:20</div>
+  </header>
+
+  <main id="content">
+    <!-- Opdrachten worden hier geladen -->
+  </main>
+
+  <nav>
+    <button id="prevBtn">⬅ Vorige</button>
+    <div id="timer">00:00</div>
+    <button id="nextBtn">Volgende ➡</button>
+  </nav>
+
+  <footer>
+    © 2025 – STEM Techniek | LEGO Mindstorms
+  </footer>
+
+  <script>
+    // ---------------------------------
+    // Lesopdrachten configuratie
+    // ---------------------------------
+    const opdrachten = [
+      {
+        titel: "Opdracht 1 – Eén motor laten draaien",
+        tekst: `
+          <p>Laat de robot <strong>één motor</strong> laten draaien gedurende <strong>3 seconden</strong>.</p>
+          <ul>
+            <li>Kies één motorpoort (bijv. motor A).</li>
+            <li>Stel in dat hij draait op halve snelheid.</li>
+            <li>Na 3 seconden stopt hij automatisch.</li>
+          </ul>
+          <p>✅ Laat de leerkracht even meekijken voor je verdergaat.</p>
+        `
+      },
+      {
+        titel: "Opdracht 2 – Twee motoren tegelijk",
+        tekst: `
+          <p>Laat de robot <strong>twee motoren</strong> tegelijk bewegen, zodat hij vooruit rijdt.</p>
+          <ul>
+            <li>Gebruik motor A en B.</li>
+            <li>Beide motoren vooruit, 2 seconden.</li>
+            <li>Daarna 1 seconde achteruit.</li>
+          </ul>
+          <p>✅ Toon dat de robot in rechte lijn rijdt.</p>
+        `
+      },
+      {
+        titel: "Opdracht 3 – Draaien op de plaats",
+        tekst: `
+          <p>Laat de robot op de plaats draaien.</p>
+          <ul>
+            <li>Motor A vooruit, motor B achteruit.</li>
+            <li>Laat hem 180° draaien.</li>
+          </ul>
+          <p>✅ Klaar? Toon het aan de leerkracht voor feedback.</p>
+        `
+      },
+      {
+        titel: "Opdracht 4 – Stoppen bij een obstakel",
+        tekst: `
+          <p>Gebruik de <strong>ultrasone sensor</strong> om te stoppen bij een obstakel.</p>
+          <ul>
+            <li>Laat de robot rijden tot hij op <strong>15 cm</strong> van een object is.</li>
+            <li>Laat hem dan stoppen.</li>
+          </ul>
+          <p>✅ Test met een doos of fles en toon je resultaat.</p>
+        `
+      },
+      {
+        titel: "Opdracht 5 – Draaien aan obstakel",
+        tekst: `
+          <p>Breid je vorige code uit.</p>
+          <ul>
+            <li>De robot stopt bij het obstakel.</li>
+            <li>Daarna draait hij rechtsaf en rijdt 2 seconden verder.</li>
+          </ul>
+          <p>✅ Laat zien hoe je robot slim reageert.</p>
+        `
+      },
+      {
+        titel: "Opdracht 6 – Lijn volgen",
+        tekst: `
+          <p>Gebruik de <strong>kleursensor</strong> om een zwarte lijn te volgen.</p>
+          <ul>
+            <li>Stel in dat de robot de lijn detecteert (zwart-wit verschil).</li>
+            <li>Pas zijn snelheid aan om op de lijn te blijven.</li>
+          </ul>
+          <p>✅ Als dit lukt, ben je klaar voor de finale!</p>
+        `
+      },
+      {
+        titel: "Opdracht 7 – Extra uitdaging",
+        tekst: `
+          <p>Je bent sneller klaar? Maak een <strong>coole robot</strong> met iets extra:</p>
+          <ul>
+            <li>Laat hem een vierkant rijden.</li>
+            <li>Laat hem toeteren of knipperen bij obstakels.</li>
+            <li>Experimenteer met geluiden.</li>
+          </ul>
+          <p>🎉 Toon je creatie en inspireer de anderen!</p>
+        `
+      },
+      {
+        titel: "Einde van de les – Reflectie",
+        tekst: `
+          <p>Top gewerkt vandaag! ✨</p>
+          <p>Jullie hebben geleerd hoe een robot beweegt, stopt, draait en reageert op sensoren.</p>
+          <p>Volgende keer gaan we een volledig parcours bouwen en testen wie de slimste robot maakt!</p>
+          <p style="text-align:center; font-weight:bold;">🔁 Vergeet niet je code te bewaren!</p>
+        `
+      }
+    ];
+
+    const content = document.getElementById("content");
+    const clockEl = document.getElementById("clock");
+    const timerEl = document.getElementById("timer");
+
+    let current = 0;
+    let startTime = Date.now();
+
+    function toonOpdracht(index) {
+      const opdracht = opdrachten[index];
+      content.innerHTML = `
+        <h2>${opdracht.titel}</h2>
+        ${opdracht.tekst}
+      `;
+      document.getElementById("prevBtn").disabled = index === 0;
+      document.getElementById("nextBtn").textContent =
+        index === opdrachten.length - 1 ? "⬅ Terug naar startpagina" : "Volgende ➡";
+    }
+
+    function updateClock() {
+      const now = new Date();
+      clockEl.textContent = `🕒 ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+      requestAnimationFrame(updateClock);
+    }
+    updateClock();
+
+    function updateTimer() {
+      const diff = Math.floor((Date.now() - startTime) / 1000);
+      const min = String(Math.floor(diff / 60)).padStart(2,"0");
+      const sec = String(diff % 60).padStart(2,"0");
+      timerEl.textContent = `${min}:${sec}`;
+      requestAnimationFrame(updateTimer);
+    }
+    updateTimer();
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (current < opdrachten.length - 1) {
+        current++;
+        toonOpdracht(current);
+      } else {
+        window.location.href = "../../index.html";
+      }
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (current > 0) {
+        current--;
+        toonOpdracht(current);
+      }
+    });
+
+    // Start
+    toonOpdracht(current);
+  </script>
+
+</body>
+</html>

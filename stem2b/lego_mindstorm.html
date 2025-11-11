@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Techniek – Werken met LEGO Mindstorms</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #e8f0ff, #ffffff);
+      color: #003366;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #004aad;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    #clock {
+      font-size: 1em;
+      color: #e0e6ff;
+      margin-top: 5px;
+    }
+
+    #content {
+      flex: 1;
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f4f8ff;
+      border-top: 1px solid #ccc;
+      position: sticky;
+      bottom: 0;
+    }
+
+    button {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #003a8c;
+    }
+
+    #timer {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #004aad;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    h2 {
+      color: #004aad;
+      margin-top: 0;
+    }
+
+    ul {
+      line-height: 1.7em;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚙️ Techniek – Werken met LEGO Mindstorms</h1>
+    <div id="clock">🕒 10:20</div>
+  </header>
+
+  <main id="content">
+    <h2>Welkom bij de les!</h2>
+    <p>
+      Vandaag gaan jullie stap voor stap leren werken met <strong>LEGO Mindstorms</strong>.  
+      In kleine teams bouwen en programmeren jullie een robot die straks zelfstandig een parcours kan afleggen.  
+      Jullie werken <strong>één opdracht per keer</strong> af. Pas als een opdracht goed is uitgevoerd, mag je verder naar de volgende.
+    </p>
+
+    <h2>Wat we vandaag doen</h2>
+    <ol>
+      <li>Laat één motor draaien.</li>
+      <li>Laat twee motoren draaien in verschillende richtingen.</li>
+      <li>Laat de robot stoppen bij een obstakel (ongeveer 15 cm afstand).</li>
+      <li>Laat de robot draaien aan het obstakel.</li>
+      <li>Laat de robot een lijn detecteren en volgen.</li>
+      <li>Ben je sneller klaar? Bouw een <strong>coole robot</strong> met extra functies!</li>
+    </ol>
+
+    <h2>Hoe we werken</h2>
+    <p>
+      Jullie werken in groepen van drie. Iedereen schrijft zijn eigen code op, ook al testen we maar één robot per groep.  
+      Na elke opdracht laat je je resultaat zien – als het werkt, krijg je een <strong>OK</strong> en mag je verder.  
+      Werk rustig, denk logisch, en help elkaar.
+    </p>
+
+    <h2>Toekomstvisie van dit project</h2>
+    <p>
+      Dit is het begin van een groter project: <strong>“Robots op het parcours”</strong>.  
+      In de komende weken bouwen we verder aan jullie robot, programmeren we sensoren, en leren we hem beslissingen laten nemen.  
+      Uiteindelijk zal elke groep zijn robot door een <strong>volledig parcours</strong> sturen dat jullie zelf ontwerpen en bouwen.  
+      De beste robot krijgt natuurlijk een ereplaats op onze STEM-showcase!
+    </p>
+
+    <p style="margin-top: 20px; text-align:center; font-weight:600;">
+      🤖 Veel succes – laat zien wat techniek in actie betekent!
+    </p>
+  </main>
+
+  <nav>
+    <button id="prevBtn" disabled>⬅ Vorige</button>
+    <div id="timer">00:00</div>
+    <button id="nextBtn">Start opdrachten ➡</button>
+  </nav>
+
+  <footer>
+    © 2025 – STEM Techniek | Werken met LEGO Mindstorms
+  </footer>
+
+  <script>
+    // ------------------------------
+    // Klok en navigatie
+    // ------------------------------
+    const startLes = new Date();
+    startLes.setHours(10, 20, 0, 0);
+
+    const clockEl = document.getElementById("clock");
+    const timerEl = document.getElementById("timer");
+
+    function updateClock() {
+      const now = new Date();
+      clockEl.textContent = `🕒 ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+      requestAnimationFrame(updateClock);
+    }
+    updateClock();
+
+    let startTime = Date.now();
+
+    function updateTimer() {
+      const diff = Math.floor((Date.now() - startTime) / 1000);
+      const min = String(Math.floor(diff / 60)).padStart(2,"0");
+      const sec = String(diff % 60).padStart(2,"0");
+      timerEl.textContent = `${min}:${sec}`;
+      requestAnimationFrame(updateTimer);
+    }
+    updateTimer();
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      window.location.href = "lesdeel/lesdeel1.html"; // naar aparte opdrachtenpagina
+    });
+  </script>
+
+</body>
+</html>
