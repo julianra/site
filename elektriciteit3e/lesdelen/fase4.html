@@ -1,0 +1,116 @@
+<section>
+  <h2>💡 Fase 4 – Energizer: “LampKlikker Online”</h2>
+
+  <form id="playerForm" style="text-align:center; margin-bottom:20px;">
+    <input id="playerName" type="text" placeholder="Naam" required>
+    <input id="playerClass" type="text" placeholder="Klas" required>
+    <input id="playerCode" type="text" placeholder="Uniek woord" required>
+    <button type="submit">✅ Start</button>
+  </form>
+
+  <div id="lampGame" style="text-align:center; display:none;">
+    <img id="lampImg" src="../ref/lamp_uit.png" alt="Lamp" style="width:200px;cursor:pointer;">
+    <p id="gameTimer">🕓 30 s</p>
+    <p id="clickCount">Aantal klikken: 0</p>
+    <button id="startBtn">▶️ Start spel</button>
+  </div>
+
+  <div id="result" style="display:none; text-align:center; margin-top:20px;">
+    <h3>🏆 Tijd voorbij!</h3>
+    <p id="finalScore"></p>
+    <p id="feedback"></p>
+    <button id="restartBtn">🔁 Opnieuw</button>
+  </div>
+
+  <script>
+  setTimeout(()=>{
+    const form=document.getElementById('playerForm');
+    const lampGame=document.getElementById('lampGame');
+    const nameInput=document.getElementById('playerName');
+    const classInput=document.getElementById('playerClass');
+    const codeInput=document.getElementById('playerCode');
+    const lampImg=document.getElementById('lampImg');
+    const timerEl=document.getElementById('gameTimer');
+    const countEl=document.getElementById('clickCount');
+    const startBtn=document.getElementById('startBtn');
+    const resultDiv=document.getElementById('result');
+    const finalScore=document.getElementById('finalScore');
+    const feedback=document.getElementById('feedback');
+    const restartBtn=document.getElementById('restartBtn');
+
+    let running=false,isOn=false,clicks=0,timeLeft=30,timer;
+    let player={name:'',klas:'',code:''};
+
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      player={
+        name:nameInput.value.trim(),
+        klas:classInput.value.trim(),
+        code:codeInput.value.trim()
+      };
+      if(!player.name||!player.klas||!player.code)return;
+      form.style.display='none';
+      lampGame.style.display='block';
+    });
+
+    lampImg.addEventListener('click',()=>{
+      if(!running)return;
+      isOn=!isOn;clicks++;
+      lampImg.src=isOn?"../ref/lamp_aan.png":"../ref/lamp_uit.png";
+      countEl.textContent="Aantal klikken: "+clicks;
+    });
+
+    startBtn.addEventListener('click',()=>{
+      clicks=0;timeLeft=30;running=true;
+      startBtn.style.display='none';
+      resultDiv.style.display='none';
+      timerEl.textContent="🕓 30 s";
+      timer=setInterval(()=>{
+        timeLeft--;
+        timerEl.textContent="🕓 "+timeLeft+" s";
+        if(timeLeft<=0){clearInterval(timer);endGame();}
+      },1000);
+    });
+
+    function endGame(){
+      running=false;
+      resultDiv.style.display='block';
+      startBtn.style.display='inline-block';
+      finalScore.textContent="Jouw score: "+clicks+" klikken";
+
+      // score doorsturen naar de server
+      fetch("../ref/save_score.php",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          name:player.name,
+          klas:player.klas,
+          code:player.code,
+          score:clicks
+        })
+      })
+      .then(r=>r.json())
+      .then(data=>{
+        if(data.ok){
+          feedback.style.color="#009961";
+          feedback.textContent="Score opgeslagen! Kijk of je record is verbeterd.";
+        }else{
+          feedback.style.color="#d90429";
+          feedback.textContent="Fout bij opslaan: "+(data.error||"onbekend");
+        }
+      })
+      .catch(()=>{
+        feedback.style.color="#d90429";
+        feedback.textContent="Kon geen verbinding maken met de server.";
+      });
+    }
+
+    restartBtn.addEventListener('click',()=>{
+      resultDiv.style.display='none';
+      startBtn.style.display='inline-block';
+      clicks=0;
+      countEl.textContent="Aantal klikken: 0";
+    });
+  },200);
+  </script>
+</section>

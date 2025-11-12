@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚡ Elektriciteit Theorie – Enkelpolige Schakelaar</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #eaf3ff, #ffffff);
+      color: #002b5c;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #004aad;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    #content {
+      flex: 1;
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f4f8ff;
+      border-top: 1px solid #ccc;
+      position: sticky;
+      bottom: 0;
+    }
+
+    button {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #003a8c;
+    }
+
+    #timer {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #004aad;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>⚡ Elektriciteit Theorie – Enkelpolige Schakelaar</h1>
+  </header>
+
+  <main id="content">
+    <!-- Lesdeel wordt hier ingeladen -->
+  </main>
+
+  <nav>
+    <button id="prevBtn">⬅ Vorige</button>
+    <div id="timer">00:00</div>
+    <button id="nextBtn">Volgende ➡</button>
+  </nav>
+
+  <footer>
+    © Elektriciteit Theorie – 3E | Ontworpen door Julian Rai Anwor
+  </footer>
+
+  <script>
+    // Bestanden per lesfase
+    const lesdelen = [
+      "lesdelen/fase1.html",
+      "lesdelen/fase2.html",
+      "lesdelen/fase3.html",
+      "lesdelen/fase4.html",
+      "lesdelen/fase5.html",
+      "lesdelen/fase6.html"
+    ];
+
+    // Tijdschema (100 minuten: 13:00–14:40)
+    const planning = [
+      { hour: 13, minute: 0, duration: 10 },
+      { hour: 13, minute: 10, duration: 20 },
+      { hour: 13, minute: 30, duration: 20 },
+      { hour: 13, minute: 50, duration: 20 },
+      { hour: 14, minute: 10, duration: 15 },
+      { hour: 14, minute: 25, duration: 15 }
+    ];
+
+    let current = 0;
+    const content = document.getElementById("content");
+    const timerEl = document.getElementById("timer");
+    let timerInterval;
+
+    // ----------------------
+    // Lesdeel laden
+    // ----------------------
+  function loadLesdeel(index) {
+  fetch(lesdelen[index])
+    .then(res => res.text())
+    .then(html => {
+      content.innerHTML = html;
+      startTimer(index);
+
+      // scripts binnen geladen lesdeel uitvoeren
+      const scripts = content.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) newScript.src = oldScript.src;
+        else newScript.textContent = oldScript.textContent;
+        document.body.appendChild(newScript);
+        oldScript.remove();
+      });
+    });
+}
+
+    // ----------------------
+    // Timer
+    // ----------------------
+    function startTimer(index) {
+      if (timerInterval) cancelAnimationFrame(timerInterval);
+      const plan = planning[index];
+      const startTime = new Date();
+      startTime.setHours(plan.hour, plan.minute, 0, 0);
+      const endTime = new Date(startTime.getTime() + plan.duration * 60000);
+
+      function tick() {
+        const now = new Date();
+        const diff = endTime - now;
+
+        if (diff <= 0) {
+          const over = Math.abs(diff);
+          const m = Math.floor(over / 60000);
+          const s = Math.floor((over % 60000) / 1000);
+          timerEl.textContent = `⏰ Tijd voorbij (+${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')})`;
+          timerEl.style.color = "#d90429";
+        } else {
+          const m = Math.floor(diff / 60000);
+          const s = Math.floor((diff % 60000) / 1000);
+          timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+          timerEl.style.color =
+            diff < 2 * 60000 ? "#e63946" :
+            diff < 5 * 60000 ? "#f1c40f" :
+            "#009961";
+        }
+        timerInterval = requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    // ----------------------
+    // Navigatieknoppen
+    // ----------------------
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (current < lesdelen.length - 1) {
+        current++;
+        loadLesdeel(current);
+      }
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (current > 0) {
+        current--;
+        loadLesdeel(current);
+      }
+    });
+
+    // ----------------------
+    // Start bij fase 1
+    // ----------------------
+    loadLesdeel(current);
+  </script>
+</body>
+</html>

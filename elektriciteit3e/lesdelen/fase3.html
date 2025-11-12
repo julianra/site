@@ -1,0 +1,172 @@
+<section>
+  <h2>📘 Fase 3 – Schema’s tekenen en inoefenen (13:30 – 13:50)</h2>
+
+  <h3>1️⃣ Wat zie je?</h3>
+  <div id="schemaViewer" style="text-align:center; margin:20px 0;">
+    <img id="schemaImg" src="../ref/situatieschema.png"
+         alt="Situatieschema" style="max-width:90%; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+    <p id="schemaCaption" style="margin-top:10px; color:#004aad; font-weight:bold;">
+      🏠 Situatieschema – toont waar de toestellen zich bevinden.
+    </p>
+
+    <div style="margin-top:15px;">
+      <button type="button" onclick="prevSchema()">⬅ Vorige</button>
+      <button type="button" onclick="nextSchema()">Volgende ➡</button>
+    </div>
+  </div>
+
+  <h3>2️⃣ Opdracht – Teken zelf</h3>
+  <ul>
+    <li>Teken een <strong>situatieschema</strong> in Trikker van een lamp en een enkelpolige schakelaar.</li>
+    <li>Zet dit om in een <strong>eendraadschema</strong> in Trikker.</li>
+    <li>Teken daarna het <strong>bedradingsschema</strong> op papier met alle draden (fase = rood, schakeldraad = zwart, neuter = blauw, aarde = geel-groen).</li>
+  </ul>
+
+  <p><em>👉 Tip:</em> gebruik liniaal en noteer bij elke draad de juiste kleur en functie.</p>
+
+  <div style="background:#fdf6e3; border-left:5px solid #e0b000; padding:15px 20px; border-radius:8px; margin:20px 0;">
+    <strong>Extra uitdaging:</strong>
+    <ul>
+      <li>Voeg een aardedraad toe naar het armatuur.</li>
+      <li>Label alle draden met L, N, PE en schakeldraad.</li>
+      <li>Geef duidelijk aan waar de schakelaar de fase onderbreekt.</li>
+    </ul>
+  </div>
+
+  <h3>🧩 Mini-quiz</h3>
+  <button id="startQuizBtn" type="button" onclick="startQuiz()" style="margin-bottom:10px;">🎯 Start quiz</button>
+
+  <div id="quiz" style="display:none;">
+    <div id="quizQuestion"></div>
+    <div id="quizFeedback" style="margin-top:10px; font-weight:bold;"></div>
+    <button id="nextQuestionBtn" type="button" style="margin-top:10px; display:none;" onclick="nextQuestion()">➡ Volgende vraag</button>
+  </div>
+
+  <div style="margin-top:25px; text-align:right;">
+    <button class="next-phase" onclick="parent.document.getElementById('nextBtn').click()">➡ Volgende fase</button>
+  </div>
+
+  <script>
+    /* ---------- SCHEMA-VIEWER ---------- */
+    const schemas = [
+      {
+        src: "ref/situatieschema.png",
+        caption: "🏠 Situatieschema – toont waar de toestellen zich bevinden."
+      },
+      {
+        src: "ref/eendraadschema.png",
+        caption: "📄 Eendraadschema – vereenvoudigd AREI-schema met één lijn per kring."
+      },
+      {
+        src: "ref/bedradingsschema.jpeg",
+        caption: "🧵 Bedradingsschema – toont alle draden afzonderlijk zoals in de praktijk."
+      }
+    ];
+
+    let currentSchema = 0;
+    const imgEl = document.getElementById("schemaImg");
+    const captionEl = document.getElementById("schemaCaption");
+
+    function updateSchema() {
+      const s = schemas[currentSchema];
+      imgEl.src = s.src;
+      captionEl.textContent = s.caption;
+    }
+    function nextSchema() {
+      currentSchema = (currentSchema + 1) % schemas.length;
+      updateSchema();
+    }
+    function prevSchema() {
+      currentSchema = (currentSchema - 1 + schemas.length) % schemas.length;
+      updateSchema();
+    }
+
+    /* ---------- QUIZ (één vraag per keer) ---------- */
+    const quizData = [
+      {
+        question: "1️⃣ In welk schema zie je alle draden apart?",
+        options: ["Situatieschema", "Eendraadschema", "Bedradingsschema"],
+        correct: 2
+      },
+      {
+        question: "2️⃣ Welk schema gebruik je voor AREI-keuring?",
+        options: ["Situatieschema", "Eendraadschema", "Bedradingsschema"],
+        correct: 1
+      },
+      {
+        question: "3️⃣ Welk schema toont hoe het in de kamer gemonteerd wordt?",
+        options: ["Situatieschema", "Eendraadschema", "Bedradingsschema"],
+        correct: 0
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startQuiz() {
+      document.getElementById("quiz").style.display = "block";
+      const startBtn = document.getElementById("startQuizBtn");
+      if (startBtn) startBtn.style.display = "none";
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      const container = document.getElementById("quizQuestion");
+      const feedback = document.getElementById("quizFeedback");
+      const nextBtn = document.getElementById("nextQuestionBtn");
+
+      feedback.textContent = "";
+      nextBtn.style.display = "none";
+
+      let html = `<p>${q.question}</p>`;
+      q.options.forEach((opt, i) => {
+        html += `<button type="button" style="display:block; margin:6px auto;" onclick="checkAnswer(${i})">${opt}</button>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function checkAnswer(choice) {
+      const q = quizData[currentQuestion];
+      const feedback = document.getElementById("quizFeedback");
+      const nextBtn = document.getElementById("nextQuestionBtn");
+
+      if (choice === q.correct) {
+        score++;
+        feedback.style.color = "green";
+        feedback.textContent = "✅ Juist!";
+      } else {
+        feedback.style.color = "#d90429";
+        feedback.textContent = "❌ Fout – onthoud het verschil.";
+      }
+      nextBtn.style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const container = document.getElementById("quizQuestion");
+      const feedback = document.getElementById("quizFeedback");
+      const nextBtn = document.getElementById("nextQuestionBtn");
+
+      container.innerHTML = `<p>🎯 Klaar!</p>`;
+      feedback.style.color = (score === quizData.length) ? "green" : "#d90429";
+      feedback.innerHTML = `Je had <strong>${score}/${quizData.length}</strong> goed. <button type="button" onclick="restartQuiz()">🔁 Opnieuw</button>`;
+      nextBtn.style.display = "none";
+    }
+
+    function restartQuiz() {
+      score = 0;
+      currentQuestion = 0;
+      document.getElementById("quizFeedback").textContent = "";
+      loadQuestion();
+    }
+  </script>
+</section>
