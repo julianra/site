@@ -109,19 +109,24 @@
       "lesdelen/fase3.html",
       "lesdelen/fase4.html",
       "lesdelen/fase5.html",
-      "lesdelen/fase6.html"
+      "lesdelen/fase6.html",
+      "lesdelen/fase7.html",
+      "lesdelen/fase8.html",
+      "lesdelen/fase9.html"
     ];
 
     // Tijdschema (100 minuten: 13:00–14:40)
-    const planning = [
-      { hour: 13, minute: 0, duration: 10 },
-      { hour: 13, minute: 10, duration: 20 },
-      { hour: 13, minute: 30, duration: 20 },
-      { hour: 13, minute: 50, duration: 20 },
-      { hour: 14, minute: 10, duration: 15 },
-      { hour: 14, minute: 25, duration: 15 }
-    ];
-
+   const planning = [
+  { hour: 13, minute: 0, duration: 10 },  // Fase 1
+  { hour: 13, minute: 10, duration: 20 }, // Fase 2
+  { hour: 13, minute: 30, duration: 20 }, // Fase 3
+  { hour: 13, minute: 50, duration: 5 },  // Fase 4
+  { hour: 13, minute: 55, duration: 15 }, // Fase 5
+  { hour: 14, minute: 10, duration: 15 }, // Fase 6
+  { hour: 14, minute: 25, duration: 10 }, // Fase 7
+  { hour: 14, minute: 35, duration: 5 },  // Fase 8
+  { hour: 14, minute: 40, duration: 10 }  // Fase 9
+];
     let current = 0;
     const content = document.getElementById("content");
     const timerEl = document.getElementById("timer");

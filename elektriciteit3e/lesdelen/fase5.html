@@ -1,0 +1,87 @@
+<section>
+  <h2>🔘 Fase 5 – Drukknop en Bistabiliteit (13:55 – 14:10)</h2>
+
+  <h3>🎓 Nieuwe leerstof</h3>
+  <p>
+    Tot nu toe gebruikten we een <strong>enkelpolige schakelaar</strong>: die blijft in de stand staan (AAN of UIT).  
+    Maar een <strong>drukknop</strong> werkt anders — hij komt automatisch terug in zijn beginstand.  
+    Dat noemen we <strong>monostabiel</strong>.
+  </p>
+
+  
+
+  <h3>💡 Bistabiel vs. Monostabiel</h3>
+  <table style="border-collapse:collapse; width:100%; text-align:center; margin:20px 0;">
+    <tr style="background:#f4f8ff;">
+      <th style="padding:10px;">Type</th>
+      <th style="padding:10px;">Beschrijving</th>
+      <th style="padding:10px;">Voorbeeld</th>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Monostabiel</td>
+      <td style="padding:10px;">Keert vanzelf terug</td>
+      <td style="padding:10px;">Deurbel, drukknop in lift</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Bistabiel</td>
+      <td style="padding:10px;">Blijft in positie</td>
+      <td style="padding:10px;">Lichtschakelaar</td>
+    </tr>
+  </table>
+
+  <h3>⚙️ Interactieve oefening</h3>
+  <p>Klik op de juiste knop om te zien welk type het is.</p>
+
+  <div id="switchSim" style="text-align:center; margin:25px 0;">
+    <button onclick="pressButton('mono')" style="margin:10px; padding:10px 20px;">🔘 Drukknop</button>
+    <button onclick="pressButton('bi')" style="margin:10px; padding:10px 20px;">💡 Schakelaar</button>
+    <p id="pressResult" style="font-weight:bold; color:#004aad; margin-top:15px;"></p>
+  </div>
+
+  <script>
+    function pressButton(type) {
+      const res = document.getElementById('pressResult');
+      if (type === 'mono') {
+        res.textContent = 'Monostabiel: contact sluit enkel zolang je indrukt.';
+      } else {
+        res.textContent = 'Bistabiel: de stand blijft behouden (AAN of UIT).';
+      }
+    }
+  </script>
+
+  <h3>🧠 Denkvraag</h3>
+  <p>
+    Waarom gebruiken we in domotica vaak drukknoppen in plaats van gewone schakelaars?
+  </p>
+
+  <div style="background:#fdf6e3; border-left:5px solid #e0b000; padding:15px; border-radius:8px; margin:20px 0;">
+    <p><strong>Tip:</strong> Een drukknop stuurt een signaal naar een relais of controller,  
+    die dan beslist wat er gebeurt. Daardoor kun je dezelfde lamp vanuit meerdere plaatsen bedienen!</p>
+  </div>
+
+  <h3>🎯 Mini-quiz</h3>
+  <p><em>Klik het juiste antwoord aan:</em></p>
+  <div id="quizZone">
+    <p>Een drukknop die terugveert als je loslaat, is...</p>
+    <button onclick="quizAnswer('goed')" style="margin:5px;">Monostabiel</button>
+    <button onclick="quizAnswer('fout')" style="margin:5px;">Bistabiel</button>
+    <p id="quizFeedback" style="font-weight:bold; margin-top:10px;"></p>
+  </div>
+
+  <script>
+    function quizAnswer(choice){
+      const fb=document.getElementById('quizFeedback');
+      if(choice==='goed'){
+        fb.style.color='green';
+        fb.textContent='✅ Juist! Monostabiel = tijdelijk contact.';
+      } else {
+        fb.style.color='#d90429';
+        fb.textContent='❌ Fout. Een bistabiele schakelaar blijft in stand.';
+      }
+    }
+  </script>
+
+  <div style="margin-top:25px; text-align:right;">
+    <button class="next-phase" onclick="parent.document.getElementById('nextBtn').click()">➡ Volgende fase</button>
+  </div>
+</section>

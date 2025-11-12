@@ -1,0 +1,78 @@
+<section>
+  <h2>🏁 Fase 8 – Herhaling & Vastzetten (14:35 – 14:40)</h2>
+
+  <h3>🎯 Doel</h3>
+  <p>
+    De leerlingen herhalen de belangrijkste begrippen uit de les:  
+    enkelpolige, dubbelpolige en drukknopschakelaar, symbolen en werking.
+  </p>
+
+  <h3>🏐 Klasactiviteit – “De Bliksem-Bal”</h3>
+  <p>
+    De leraar gooit een zachte bal naar een leerling en stelt een snelle vraag.  
+    Die leerling antwoordt, gooit de bal door en stelt een nieuwe vraag aan iemand anders.  
+    <em>Doel:</em> zo veel mogelijk correcte antwoorden in 3 minuten!
+  </p>
+
+  <div style="background:#f4f8ff;border-left:5px solid #004aad;padding:15px;border-radius:8px;margin:15px 0;">
+    <strong>Voorbeeldvragen:</strong>
+    <ul>
+      <li>Wat betekent <strong>bistabiel</strong>?</li>
+      <li>Wat doet een <strong>drukknop</strong>?</li>
+      <li>Hoeveel klemmen heeft een <strong>dubbelpolige</strong> schakelaar?</li>
+      <li>Welke draad wordt onderbroken bij een enkelpolige schakelaar?</li>
+      <li>Waarom is een dubbelpolige schakelaar veiliger?</li>
+    </ul>
+  </div>
+
+  <h3>💻 Alternatief – Digitale Quiz</h3>
+  <p>Klik op de knop om een willekeurige herhalingsvraag te krijgen:</p>
+
+  <div style="text-align:center;margin:20px 0;">
+    <button id="newQuestion" style="background:#004aad;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">
+      🎲 Nieuwe vraag
+    </button>
+    <p id="quizQuestion8" style="font-size:1.2em;font-weight:bold;margin-top:20px;color:#004aad;"></p>
+  </div>
+
+  <script>
+  setTimeout(()=>{
+    const questions=[
+      "Wat betekent bistabiel?",
+      "Wat is het verschil tussen monostabiel en bistabiel?",
+      "Wat doet een drukknop precies?",
+      "Hoeveel klemmen heeft een dubbelpolige schakelaar?",
+      "Welke draad onderbreekt de enkelpolige schakelaar?",
+      "Wanneer gebruik je een dubbelpolige schakelaar?",
+      "Welke draad is de schakeldraad?",
+      "Wat is het symbool van een drukknop?",
+      "Waarom onderbreken we altijd de fase?",
+      "Wat gebeurt er als de neuter wordt onderbroken?"
+    ];
+    const btn=document.getElementById('newQuestion');
+    const qzone=document.getElementById('quizQuestion8');
+    btn.addEventListener('click',()=>{
+      const q=questions[Math.floor(Math.random()*questions.length)];
+      qzone.textContent="❓ "+q;
+    });
+  },200);
+  </script>
+
+  <h3>🧠 Reflectie – Wat heb je geleerd?</h3>
+  <ul>
+    <li>Ik kan uitleggen wat een enkelpolige, dubbelpolige en drukknopschakelaar doen.</li>
+    <li>Ik herken de symbolen in situatieschema’s en eendraadschema’s.</li>
+    <li>Ik weet in welke situaties je welke schakelaar gebruikt.</li>
+  </ul>
+
+  <h3>📦 Afronding</h3>
+  <p>
+    <strong>Leerkracht:</strong> vat samen wat goed ging, noteert veelgemaakte fouten,  
+    en licht kort toe wat er volgt:
+    <em>“Volgende les leren we de wisselschakeling – één lamp bedienen van twee plaatsen.”</em>
+  </p>
+
+  <div style="margin-top:25px;text-align:right;">
+    <button class="next-phase" onclick="parent.document.getElementById('nextBtn').click()">➡ Volgende fase</button>
+  </div>
+</section>

@@ -1,0 +1,110 @@
+<section>
+  <h2>⚡ Fase 6 – De Dubbelpolige Schakelaar (14:10 – 14:25)</h2>
+
+  <h3>🎓 Nieuwe leerstof</h3>
+  <p>
+    Tot nu toe schakelden we alleen de <strong>fasedraad</strong> met een enkelpolige schakelaar.  
+    Maar in sommige installaties willen we <strong>twee geleiders tegelijk onderbreken</strong> — dat doen we met een <strong>dubbelpolige schakelaar</strong>.
+  </p>
+
+ 
+
+  <h3>🧩 Wat is het verschil?</h3>
+  <table style="border-collapse:collapse; width:100%; text-align:center; margin:20px 0;">
+    <tr style="background:#f4f8ff;">
+      <th style="padding:10px;">Kenmerk</th>
+      <th style="padding:10px;">Enkelpolig</th>
+      <th style="padding:10px;">Dubbelpolig</th>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Aantal polen</td>
+      <td style="padding:10px;">1 (alleen fase)</td>
+      <td style="padding:10px;">2 (fase + neuter)</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Aantal aansluitklemmen</td>
+      <td style="padding:10px;">2</td>
+      <td style="padding:10px;">4</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Toepassing</td>
+      <td style="padding:10px;">Algemene verlichting</td>
+      <td style="padding:10px;">Veilig uitschakelen van toestellen of natte ruimtes</td>
+    </tr>
+  </table>
+
+  <h3>⚙️ Interactieve vergelijking</h3>
+  <p>Klik op de schakelaars om te zien welke draden onderbroken worden.</p>
+
+  <div id="switchSim" style="display:flex; justify-content:center; gap:50px; margin:25px 0;">
+    <div>
+      <p style="font-weight:bold;">Enkelpolig</p>
+      <button onclick="toggle('single')" id="singleBtn" style="padding:15px 25px;">💡 AAN</button>
+      <p id="singleState" style="margin-top:10px;">Fase onderbroken: ❌</p>
+    </div>
+    <div>
+      <p style="font-weight:bold;">Dubbelpolig</p>
+      <button onclick="toggle('double')" id="doubleBtn" style="padding:15px 25px;">💡 AAN</button>
+      <p id="doubleState" style="margin-top:10px;">Fase + Neuter onderbroken: ❌❌</p>
+    </div>
+  </div>
+
+  <script>
+    let singleOn=true, doubleOn=true;
+    function toggle(type){
+      if(type==='single'){
+        singleOn=!singleOn;
+        document.getElementById('singleBtn').textContent=singleOn?'💡 AAN':'💡 UIT';
+        document.getElementById('singleState').textContent=singleOn?'Fase onderbroken: ❌':'Fase onderbroken: ✅';
+      }else{
+        doubleOn=!doubleOn;
+        document.getElementById('doubleBtn').textContent=doubleOn?'💡 AAN':'💡 UIT';
+        document.getElementById('doubleState').textContent=doubleOn?'Fase + Neuter onderbroken: ❌❌':'Fase + Neuter onderbroken: ✅✅';
+      }
+    }
+  </script>
+
+  <h3>🧠 Denkvraag</h3>
+  <p>
+    Waarom is een dubbelpolige schakelaar veiliger bij toestellen in de badkamer?
+  </p>
+
+  <div style="background:#fdf6e3; border-left:5px solid #e0b000; padding:15px; border-radius:8px; margin:20px 0;">
+    <p><strong>Antwoordidee:</strong>  
+    Omdat de schakelaar <strong>beide geleiders onderbreekt</strong>, kan er geen gevaarlijke spanning meer aanwezig zijn 
+    aan het toestel, zelfs niet bij foutieve aansluiting van de netdraden.</p>
+  </div>
+
+  <h3>✏️ Opdracht 3 punten </h3>
+  <ul>
+    <li>Teken samen het <strong>bedradingsschema</strong> van een lamp met een dubbelpolige schakelaar.</li>
+    <li>Label de draden (L, N, PE) en duid aan welke onderbroken worden.</li>
+    <li>Noteer: <em>veilig uitschakelen = fase + neuter onderbroken.</em></li>
+  </ul>
+
+  <h3>🎯 Mini-quiz</h3>
+  <p><em>Kies het juiste antwoord:</em></p>
+  <div id="quizZone6">
+    <p>Een dubbelpolige schakelaar gebruik je vooral...</p>
+    <button onclick="quiz6('goed')" style="margin:5px;">In vochtige ruimtes</button>
+    <button onclick="quiz6('fout')" style="margin:5px;">Voor een stopcontact</button>
+    <p id="quizFeedback6" style="font-weight:bold; margin-top:10px;"></p>
+  </div>
+
+  <script>
+    function quiz6(choice){
+      const fb=document.getElementById('quizFeedback6');
+      if(choice==='goed'){
+        fb.style.color='green';
+        fb.textContent='✅ Juist! In vochtige ruimtes of bij toestellen die volledig spanningsloos moeten zijn.';
+      } else {
+        fb.style.color='#d90429';
+        fb.textContent='❌ Fout. Dubbelpolig gebruik je niet voor gewone stopcontacten.';
+      }
+    }
+  </script>
+
+  <div style="margin-top:25px; text-align:right;">
+    <button class="next-phase" onclick="parent.document.getElementById('nextBtn').click()">➡ Volgende fase</button>
+  </div>
+</section>

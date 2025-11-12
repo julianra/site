@@ -1,0 +1,85 @@
+<section>
+  <h2>🧮 Fase 7 – Vergelijkende Opdracht (14:25 – 14:35)</h2>
+
+  <h3>🎯 Doel</h3>
+  <p>
+    We vergelijken de werking, symbolen en toepassingen van de
+    <strong>enkelpolige</strong>, <strong>dubbelpolige</strong> en <strong>drukknop</strong>.
+    
+  </p>
+
+  <h3>📋 Opdracht – Vul de tabel in</h3>
+  <p><em>Klik in elke cel om het juiste antwoord te kiezen. Je krijgt meteen feedback.</em></p>
+
+  <table id="compareTable" style="border-collapse:collapse;width:100%;text-align:center;margin:20px 0;">
+    <tr style="background:#f4f8ff;">
+      <th style="padding:10px;">Kenmerk</th>
+      <th style="padding:10px;">Enkelpolig</th>
+      <th style="padding:10px;">Dubbelpolig</th>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Aantal klemmen</td>
+      <td><input type="text" data-answer="2" style="width:60px;text-align:center;"></td>
+      <td><input type="text" data-answer="4" style="width:60px;text-align:center;"></td>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Onderbreekt</td>
+      <td><input type="text" data-answer="fase" style="width:120px;text-align:center;"></td>
+      <td><input type="text" data-answer="fase en neuter" style="width:120px;text-align:center;"></td>
+    </tr>
+    <tr>
+      <td style="padding:10px;">Type contact</td>
+      <td><input type="text" data-answer="bistabiel" style="width:100px;text-align:center;"></td>
+      <td><input type="text" data-answer="bistabiel" style="width:100px;text-align:center;"></td>
+    </tr>
+  </table>
+
+  <div style="text-align:center;margin:20px 0;">
+    <button id="checkAnswers" style="background:#004aad;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;">
+      ✅ Controleer antwoorden
+    </button>
+  </div>
+
+  <p id="feedback" style="text-align:center;font-weight:bold;"></p>
+
+  <script>
+    setTimeout(()=>{
+      const checkBtn=document.getElementById('checkAnswers');
+      const feedback=document.getElementById('feedback');
+      checkBtn.addEventListener('click',()=>{
+        const inputs=document.querySelectorAll('#compareTable input');
+        let correct=0;
+        inputs.forEach(inp=>{
+          const answer=inp.dataset.answer.toLowerCase().trim();
+          const value=inp.value.toLowerCase().trim();
+          if(value===answer){
+            inp.style.backgroundColor='#c8f7c5';
+            correct++;
+          } else {
+            inp.style.backgroundColor='#f7c5c5';
+          }
+        });
+        feedback.style.color=correct===inputs.length?'green':'#d90429';
+        feedback.textContent=`Je had ${correct}/${inputs.length} juist.`;
+      });
+    },200);
+  </script>
+
+  <h3>💬 Nabespreking</h3>
+  <ul>
+    <li>Wat merk je op over veiligheid en gebruik tussen de drie types?</li>
+    <li>Wanneer zou je bewust voor een drukknop kiezen in plaats van een schakelaar?</li>
+    <li>Waarom is het belangrijk om te weten welke draden elk type onderbreekt?</li>
+  </ul>
+
+  <h3>✏️ Extra oefening (snelle tekenopdracht)</h3>
+  <ul>
+    <li>Teken een bedradingsschema met één lamp en een enkelpolige schakelaar.</li>
+    <li>Label bij elke schakelaar: <em>fase, neuter, schakeldraad</em>.</li>
+    <li>Gebruik rood, blauw, zwart en geel-groen voor de juiste draden.</li>
+  </ul>
+
+  <div style="margin-top:25px;text-align:right;">
+    <button class="next-phase" onclick="parent.document.getElementById('nextBtn').click()">➡ Volgende fase</button>
+  </div>
+</section>
