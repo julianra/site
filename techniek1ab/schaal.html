@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techniek – Schalen Leren</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f0f7ff, #ffffff);
+      color: #002b5b;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #0066cc;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    #content {
+      flex: 1;
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f4f8ff;
+      border-top: 1px solid #ccc;
+      position: sticky;
+      bottom: 0;
+    }
+
+    button {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #004c99;
+    }
+
+    #timer {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #0066cc;
+    }
+    /* Zorg dat maar één fase tegelijk zichtbaar is */
+.phase {
+  display: none;
+}
+
+.phase.active {
+  display: block;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📏 Techniek – Schalen leren</h1>
+  </header>
+
+  <main id="content">
+    <!-- Lesfases worden hier geladen -->
+  </main>
+
+  <nav>
+    <button id="prevBtn">⬅ Vorige</button>
+    <div id="timer">00:00</div>
+    <button id="nextBtn">Volgende ➡</button>
+  </nav>
+
+  <footer>
+    © Techniek – Schaal & Aanzichten | Ontworpen door Julian
+  </footer>
+
+<script>
+  const lesdelen = [
+    "lesdeel/schaal1.html",
+    "lesdeel/schaal2.html",
+    "lesdeel/schaal3.html",
+    "lesdeel/schaal4.html"
+  ];
+
+  // Les start om 10:20 en stopt om 11:20 — 60 min les, opgedeeld in 4 blokken
+  const planning = [
+    { hour: 10, minute: 20, duration: 10 }, // Sterk lesbegin
+    { hour: 10, minute: 30, duration: 15 }, // Nieuwe leerstof + blended
+    { hour: 10, minute: 45, duration: 15 }, // Inoefenen + challenges
+    { hour: 11, minute: 0,  duration: 10 }  // Vastzetten + exit
+  ];
+
+  let current = 0;
+  const content = document.getElementById("content");
+  const timerEl = document.getElementById("timer");
+  let timerInterval;
+
+  function loadLesdeel(index) {
+    fetch(lesdelen[index])
+      .then(res => res.text())
+      .then(html => {
+        content.innerHTML = html;
+        startTimer(index);
+
+        const first = content.querySelector(".phase");
+        const active = content.querySelector(".phase.active");
+        if (first && !active) first.classList.add("active");
+      });
+  }
+
+  function startTimer(index) {
+    if (timerInterval) cancelAnimationFrame(timerInterval);
+
+    const plan = planning[index];
+    const startTime = new Date();
+    startTime.setHours(plan.hour, plan.minute, 0, 0);
+    const endTime = new Date(startTime.getTime() + plan.duration * 60000);
+
+    function tick() {
+      const now = new Date();
+      const diff = endTime - now;
+
+      if (diff <= 0) {
+        const over = Math.abs(diff);
+        const m = Math.floor(over / 60000);
+        const s = Math.floor((over % 60000) / 1000);
+        timerEl.textContent = `⏰ Tijd voorbij (+${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')})`;
+        timerEl.style.color = "#d90429";
+      } else {
+        const m = Math.floor(diff / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+        if (diff < 2 * 60000) timerEl.style.color = "#e63946";
+        else if (diff < 5 * 60000) timerEl.style.color = "#f1c40f";
+        else timerEl.style.color = "#009961";
+      }
+      timerInterval = requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (current < lesdelen.length - 1) {
+      current++;
+      loadLesdeel(current);
+    }
+  });
+
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    if (current > 0) {
+      current--;
+      loadLesdeel(current);
+    }
+  });
+
+  content.addEventListener("click", (e) => {
+  const btn = e.target.closest(".next-phase");
+  if (!btn) return;
+
+  const currentPhase = btn.closest(".phase");
+  const nextId = btn.dataset.next;
+  const nextPhase = content.querySelector('#' + nextId);
+
+  if (currentPhase) currentPhase.classList.remove("active");
+  if (nextPhase) nextPhase.classList.add("active");
+});
+
+  loadLesdeel(current);
+</script>
+
+</body>
+</html>
